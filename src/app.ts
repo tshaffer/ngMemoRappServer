@@ -4,7 +4,7 @@ import connectDB from './config/db';
 import morgan from 'morgan';
 
 import { Routes } from './routes/routes';
-// import activitiesRouter from './routes/activities';
+import usersRouter from './routes/users';
 // const mongoDB = 'mongodb://ted:stravaTed-0524@ds063449.mlab.com:63449/stravatron';
 
 class App {
@@ -37,7 +37,8 @@ class App {
     }
     
     this.route.routes(this.app);
-    // this.app.use('/api/v1', activitiesRouter);
+    this.app.use('/api/v1', usersRouter);
+
 
 
     // Workaround to allow empty strings
