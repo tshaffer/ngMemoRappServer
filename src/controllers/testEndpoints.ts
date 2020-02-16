@@ -98,6 +98,16 @@ export function getRestaurantByLocation(request: Request, response: Response): P
   });
 }
 
+export function getRestaurantsByLatLng(request: Request, response: Response): Promise<any> {
+
+  console.log('request.query:');
+  console.log(request.query);
+
+  return fetchYelpBusinessByLocation(request.query.latitude, request.query.longitude).then( (responseData: any) => {
+    return response.json(responseData);
+  });
+}
+
 export function updateRestaurant(request: Request, response: Response, next: any) {
   console.log('updateRestaurant');
   console.log(request.body);
