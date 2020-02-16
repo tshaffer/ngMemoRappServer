@@ -4,8 +4,9 @@ import connectDB from './config/db';
 import morgan from 'morgan';
 
 import { Routes } from './routes/routes';
+import restaurantsRouter from './routes/restaurants';
+import tagsRouter from './routes/tags';
 import usersRouter from './routes/users';
-// const mongoDB = 'mongodb://ted:stravaTed-0524@ds063449.mlab.com:63449/stravatron';
 
 class App {
 
@@ -37,6 +38,8 @@ class App {
     }
     
     this.route.routes(this.app);
+    this.app.use('/api/v1', restaurantsRouter);
+    this.app.use('/api/v1', tagsRouter);
     this.app.use('/api/v1', usersRouter);
 
 

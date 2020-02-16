@@ -6,9 +6,8 @@ const UserSchema = new Schema(
   {
     name: { type: String, required: true },
     password: { type: String, required: true },
-    registeredMenuItems: [Number],
+    tags: [Number],
   },
 );
-
 
 export default mongoose.model('User', UserSchema);
