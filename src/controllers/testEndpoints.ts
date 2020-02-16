@@ -84,8 +84,8 @@ export function getRestaurantByLocation(request: Request, response: Response): P
   console.log('request.params:');
   console.log(request.params);
 
-  const latitude: string = request.params.latitude;
-  const longitude: string = request.params.longitude;
+  const latitude: number = parseFloat(request.params.latitude);
+  const longitude: number = parseFloat(request.params.longitude);
 
   console.log('latitude: ', latitude);
   console.log('longitude: ', longitude);
@@ -93,7 +93,7 @@ export function getRestaurantByLocation(request: Request, response: Response): P
   // return fetchYelpBusinessDetails().then( (responseData: any) => {
   //   response.json(responseData);
   // });
-  return fetchYelpBusinessByLocation().then( (responseData: any) => {
+  return fetchYelpBusinessByLocation(latitude, longitude).then( (responseData: any) => {
     response.json(responseData);
   });
 }
