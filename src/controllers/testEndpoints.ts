@@ -4,6 +4,7 @@ import RestaurantCategory from '../models/RestaurantCategory';
 import Tag from '../models/Tag';
 import TagInstance from '../models/TagInstance';
 import User from '../models/User';
+import { fetchYelpBusinessDetails, fetchYelpBusinessByLocation } from './yelp';
 
 export function createUser(request: Request, response: Response, next: any) {
   console.log('createUser');
@@ -80,14 +81,21 @@ export function createRestaurantCategory(request: Request, response: Response, n
 
 export function getRestaurantByLocation(request: Request, response: Response): Promise<any> {
 
+  console.log('request.params:');
+  console.log(request.params);
+
   const latitude: string = request.params.latitude;
   const longitude: string = request.params.longitude;
 
   console.log('latitude: ', latitude);
   console.log('longitude: ', longitude);
 
-  response.json({});
-  return Promise.resolve();
+  // return fetchYelpBusinessDetails().then( (responseData: any) => {
+  //   response.json(responseData);
+  // });
+  return fetchYelpBusinessByLocation().then( (responseData: any) => {
+    response.json(responseData);
+  });
 }
 
 export function updateRestaurant(request: Request, response: Response, next: any) {

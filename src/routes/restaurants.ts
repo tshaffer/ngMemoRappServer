@@ -9,7 +9,7 @@ import {
 } from '../controllers/testEndpoints';
 
 // test endpoints
-restaurantsRouter.get('/restaurants', getRestaurantByLocation);
+restaurantsRouter.get('/restaurants/:latitude/:longitude', getRestaurantByLocation);
 restaurantsRouter.post('/restaurant', createRestaurant);
 restaurantsRouter.post('/restaurantCategory', createRestaurantCategory);
 restaurantsRouter.patch('/restaurant/:id', updateRestaurant);
