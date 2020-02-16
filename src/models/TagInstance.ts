@@ -4,8 +4,8 @@ const Schema = mongoose.Schema;
 
 const TagInstanceSchema = new Schema(
   {
-    tagId: { type: Number, required: true },
-    tagTargetId: { type: Number, required: true },
+    tagId: { type: String, required: true },
+    tagTargetId: { type: String, required: true },
     rating: { type: Number, required: true },
     comments: { type: String },
   },

@@ -4,8 +4,8 @@ const Schema = mongoose.Schema;
 
 const RestaurantSchema = new Schema(
   {
-    yelpId: { type: Number, required: true },
-    categoryId: { type: Number, required: true },
+    yelpId: { type: String, required: true },
+    categoryId: { type: String, required: true },
     tags: [Number],
   },
 );
