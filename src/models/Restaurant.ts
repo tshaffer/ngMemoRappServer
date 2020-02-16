@@ -6,7 +6,7 @@ const RestaurantSchema = new Schema(
   {
     yelpId: { type: String, required: true },
     categoryId: { type: String, required: true },
-    tags: [Number],
+    tags: [String],
   },
 );
 

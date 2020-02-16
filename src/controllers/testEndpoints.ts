@@ -78,3 +78,21 @@ export function createRestaurantCategory(request: Request, response: Response, n
   });
 }
 
+export function updateRestaurant(request: Request, response: Response, next: any) {
+  console.log('updateRestaurant');
+  console.log(request.body);
+
+  Restaurant.findById(request.params.id, (err, restaurant) => {
+    if (request.body._id) {
+      delete request.body._id;
+    }
+    for (const b in request.body) {
+      if (request.body.hasOwnProperty(b)) {
+        (restaurant as any)[b] = request.body[b];
+      }
+    }
+    restaurant.save();
+    response.json(restaurant);
+  });
+}
+
