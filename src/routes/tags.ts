@@ -3,11 +3,11 @@ const tagsRouter = express.Router();
 
 import {
   createTag,
-  createRestaurantCategory,
+  createTagInstance,
 } from '../controllers/testEndpoints';
 
 // test endpoints
 tagsRouter.post('/tag', createTag);
-tagsRouter.post('/tagInstance', createRestaurantCategory);
+tagsRouter.post('/tagInstance', createTagInstance);
 
 export default tagsRouter;
