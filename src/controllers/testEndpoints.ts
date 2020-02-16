@@ -78,6 +78,18 @@ export function createRestaurantCategory(request: Request, response: Response, n
   });
 }
 
+export function getRestaurantByLocation(request: Request, response: Response): Promise<any> {
+
+  const latitude: string = request.params.latitude;
+  const longitude: string = request.params.longitude;
+
+  console.log('latitude: ', latitude);
+  console.log('longitude: ', longitude);
+
+  response.json({});
+  return Promise.resolve();
+}
+
 export function updateRestaurant(request: Request, response: Response, next: any) {
   console.log('updateRestaurant');
   console.log(request.body);
