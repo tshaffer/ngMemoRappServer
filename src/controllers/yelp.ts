@@ -5,7 +5,7 @@ import https from 'https';
 // HEADERS
 //    Authorization: Bearer iCc5e5KyLW6OQitdmTMSLk53WmKl5AytoKywhcSCdwG3a2_kexCyIe_Sn4OCLXnKR58kIpQ3mvfr9gD7C2qkFGl92gSFxdEhCWT8XFoYJRUQ627DADQwMJuMAkhJXnYx
 
-const secretId: string = 'iCc5e5KyLW6OQitdmTMSLk53WmKl5AytoKywhcSCdwG3a2_kexCyIe_Sn4OCLXnKR58kIpQ3mvfr9gD7C2qkFGl92gSFxdEhCWT8XFoYJRUQ627DADQwMJuMAkhJXnYx';
+const apiKey: string = 'iCc5e5KyLW6OQitdmTMSLk53WmKl5AytoKywhcSCdwG3a2_kexCyIe_Sn4OCLXnKR58kIpQ3mvfr9gD7C2qkFGl92gSFxdEhCWT8XFoYJRUQ627DADQwMJuMAkhJXnYx';
 
 function fetchYelpData(endPoint: string): Promise<any> {
   return new Promise((resolve, reject) => {
@@ -14,7 +14,7 @@ function fetchYelpData(endPoint: string): Promise<any> {
       path: '/v3/' + endPoint,
       port: 443,
       headers: {
-        Authorization: 'Bearer ' + secretId,
+        Authorization: 'Bearer ' + apiKey,
       },
     };
 

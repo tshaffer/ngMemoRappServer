@@ -5,7 +5,9 @@ import Tag from '../models/Tag';
 import TagInstance from '../models/TagInstance';
 import User from '../models/User';
 import { fetchYelpBusinessDetails, fetchYelpBusinessByLocation } from './yelp';
+import RestaurantReview from '../models/RestaurantReview';
 
+// users
 export function createUser(request: Request, response: Response, next: any) {
   console.log('createUser');
   console.log(request.body);
@@ -35,6 +37,7 @@ export function updateUser(request: Request, response: Response, next: any) {
   });
 }
 
+// tags
 export function createTag(request: Request, response: Response, next: any) {
   console.log('createTag');
   console.log(request.body);
@@ -46,6 +49,7 @@ export function createTag(request: Request, response: Response, next: any) {
   });
 }
 
+// tag instances
 export function createTagInstance(request: Request, response: Response, next: any) {
   console.log('createTagInstance');
   console.log(request.body);
@@ -57,6 +61,7 @@ export function createTagInstance(request: Request, response: Response, next: an
   });
 }
 
+// restaurants
 export function createRestaurant(request: Request, response: Response, next: any) {
   console.log('createRestaurant');
   console.log(request.body);
@@ -68,6 +73,25 @@ export function createRestaurant(request: Request, response: Response, next: any
   });
 }
 
+export function updateRestaurant(request: Request, response: Response, next: any) {
+  console.log('updateRestaurant');
+  console.log(request.body);
+
+  Restaurant.findById(request.params.id, (err, restaurant) => {
+    if (request.body._id) {
+      delete request.body._id;
+    }
+    for (const b in request.body) {
+      if (request.body.hasOwnProperty(b)) {
+        (restaurant as any)[b] = request.body[b];
+      }
+    }
+    restaurant.save();
+    response.json(restaurant);
+  });
+}
+
+// restaurant categories
 export function createRestaurantCategory(request: Request, response: Response, next: any) {
   console.log('createRestaurantCategory');
   console.log(request.body);
@@ -79,6 +103,23 @@ export function createRestaurantCategory(request: Request, response: Response, n
   });
 }
 
+// restaurant reviews
+export function createRestaurantReview(request: Request, response: Response, next: any) {
+  console.log('createRestaurantReview');
+  console.log(request.body);
+  RestaurantReview.create(request.body).then((restaurantReview: any) => {
+    response.status(201).json({
+      success: true,
+      data: restaurantReview,
+    });
+  });
+}
+
+// restaurant visit reviews
+export function createRestaurantVisitReview(request: Request, response: Response, next: any) {
+}
+
+// queries
 export function getRestaurantByLocation(request: Request, response: Response): Promise<any> {
 
   console.log('request.params:');
@@ -105,24 +146,6 @@ export function getRestaurantsByLatLng(request: Request, response: Response): Pr
 
   return fetchYelpBusinessByLocation(request.query.latitude, request.query.longitude).then( (responseData: any) => {
     return response.json(responseData);
-  });
-}
-
-export function updateRestaurant(request: Request, response: Response, next: any) {
-  console.log('updateRestaurant');
-  console.log(request.body);
-
-  Restaurant.findById(request.params.id, (err, restaurant) => {
-    if (request.body._id) {
-      delete request.body._id;
-    }
-    for (const b in request.body) {
-      if (request.body.hasOwnProperty(b)) {
-        (restaurant as any)[b] = request.body[b];
-      }
-    }
-    restaurant.save();
-    response.json(restaurant);
   });
 }
 
