@@ -2,7 +2,7 @@ import { Request, Response } from 'express';
 import Restaurant from '../models/Restaurant';
 import RestaurantCategory from '../models/RestaurantCategory';
 import Tag from '../models/Tag';
-import TagInstance from '../models/TagInstance';
+import TaggedEntityRating from '../models/TaggedEntityRating';
 import User from '../models/User';
 import { fetchYelpBusinessDetails, fetchYelpBusinessByLocation } from './yelp';
 import RestaurantReview from '../models/RestaurantReview';
@@ -49,14 +49,14 @@ export function createTag(request: Request, response: Response, next: any) {
   });
 }
 
-// tag instances
-export function createTagInstance(request: Request, response: Response, next: any) {
-  console.log('createTagInstance');
+// tag entity ratings
+export function createTaggedEntityRating(request: Request, response: Response, next: any) {
+  console.log('createTaggedEntityRating');
   console.log(request.body);
-  TagInstance.create(request.body).then((tagInstance: any) => {
+  TaggedEntityRating.create(request.body).then((taggedEntityRating: any) => {
     response.status(201).json({
       success: true,
-      data: tagInstance,
+      data: taggedEntityRating,
     });
   });
 }

@@ -1,3 +1,3 @@
 export * from './Tag';
-export * from './TagInstance';
+export * from './TaggedEntityRating';
 export * from './User';
