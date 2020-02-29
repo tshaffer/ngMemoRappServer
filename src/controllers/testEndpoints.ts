@@ -149,3 +149,14 @@ export function getRestaurantsByLatLng(request: Request, response: Response): Pr
   });
 }
 
+export function getFilteredRestaurants(request: Request, response: Response, next: any) {
+
+  console.log('getFilteredRestaurants');
+  console.log(request.body);
+
+  response.status(201).json({
+    success: true,
+  });
+
+}
+
