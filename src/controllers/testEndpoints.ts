@@ -6,6 +6,7 @@ import TaggedEntityRating from '../models/TaggedEntityRating';
 import User from '../models/User';
 import { fetchYelpBusinessDetails, fetchYelpBusinessByLocation } from './yelp';
 import RestaurantReview from '../models/RestaurantReview';
+import { Document } from 'mongoose';
 
 // users
 export function createUser(request: Request, response: Response, next: any) {
@@ -134,7 +135,7 @@ export function getRestaurantByLocation(request: Request, response: Response): P
   // return fetchYelpBusinessDetails().then( (responseData: any) => {
   //   response.json(responseData);
   // });
-  return fetchYelpBusinessByLocation(latitude, longitude).then( (responseData: any) => {
+  return fetchYelpBusinessByLocation(latitude, longitude).then((responseData: any) => {
     response.json(responseData);
   });
 }
@@ -144,7 +145,7 @@ export function getRestaurantsByLatLng(request: Request, response: Response): Pr
   console.log('request.query:');
   console.log(request.query);
 
-  return fetchYelpBusinessByLocation(request.query.latitude, request.query.longitude).then( (responseData: any) => {
+  return fetchYelpBusinessByLocation(request.query.latitude, request.query.longitude).then((responseData: any) => {
     return response.json(responseData);
   });
 }
@@ -154,9 +155,22 @@ export function getFilteredRestaurants(request: Request, response: Response, nex
   console.log('getFilteredRestaurants');
   console.log(request.body);
 
-  response.status(201).json({
-    success: true,
-  });
+  // retrieve restaurant categories
+  if (request.body.hasOwnProperty('restaurantCategories')) {
+    const restaurantCategories: any[] = request.body.restaurantCategories;
+    if (restaurantCategories.length > 0) {
+      const restaurantCategoryId: string = restaurantCategories[0].id;
+      const query = Restaurant.find({ categoryId: restaurantCategoryId });
+      const promise: Promise<Document[]> = query.exec();
+      return promise.then((restaurantDocs: Document[]) => {
+        console.log(restaurantDocs);
+        response.status(201).json({
+          success: true,
+          data: restaurantDocs,
+        });
+      });
+    }
+  }
 
 }
 
