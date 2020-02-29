@@ -155,12 +155,27 @@ export function getFilteredRestaurants(request: Request, response: Response, nex
   console.log('getFilteredRestaurants');
   console.log(request.body);
 
-  // retrieve restaurant categories
+  let queryExpression: any = {};
+
+  // build query expression
+  
   if (request.body.hasOwnProperty('restaurantCategories')) {
     const restaurantCategories: any[] = request.body.restaurantCategories;
     if (restaurantCategories.length > 0) {
-      const restaurantCategoryId: string = restaurantCategories[0].id;
-      const query = Restaurant.find({ categoryId: restaurantCategoryId });
+
+      // const restaurantCategoryId: string = restaurantCategories[0].id;
+      // const query = Restaurant.find({ categoryId: restaurantCategoryId });
+
+      const restaurantCategoryIds: string[] = restaurantCategories.map( (restaurantCategory: any) => {
+        return restaurantCategory.id;
+      });
+      queryExpression = {
+        categoryId: {
+          $in: restaurantCategoryIds,
+        },
+      };
+      const query = Restaurant.find(queryExpression);
+
       const promise: Promise<Document[]> = query.exec();
       return promise.then((restaurantDocs: Document[]) => {
         console.log(restaurantDocs);
