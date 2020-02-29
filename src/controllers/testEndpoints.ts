@@ -155,7 +155,7 @@ export function getFilteredRestaurants(request: Request, response: Response, nex
   console.log('getFilteredRestaurants, requestBody:');
   console.log(request.body);
 
-  let tagSpecQuery: any = {};
+  let queryExpression: any = {};
 
   // build query expression
 
@@ -169,99 +169,129 @@ export function getFilteredRestaurants(request: Request, response: Response, nex
       const restaurantCategoryIds: string[] = restaurantCategories.map((restaurantCategory: any) => {
         return restaurantCategory.id;
       });
-      tagSpecQuery = {
-        categoryId: {
-          $in: restaurantCategoryIds,
+
+      const aggregations: any[] = [];
+      aggregations.push( {
+        $lookup:
+        {
+          from: 'restaurants',
+          localField: '_id',
+          foreignField: 'categoryId',
+          as: 'restaurantDocs',
         },
-      };
+      });
+
+      const query = RestaurantCategory.aggregate(aggregations);
+      const promise: Promise<Document[]> = query.exec();
+      return promise.then((docs: Document[]) => {
+        console.log('Aggregate results');
+        console.log(docs);
+      });
+
+
+      // queryExpression = {
+      //   categoryId: {
+      //     $in: restaurantCategoryIds,
+      //   },
+      // };
       // const query = Restaurant.find(queryExpression);
 
       // const promise: Promise<Document[]> = query.exec();
       // return promise.then((restaurantDocs: Document[]) => {
       //   console.log('Query results');
       //   console.log(restaurantDocs);
-      //   response.status(201).json({
-      //     success: true,
-      //     data: restaurantDocs,
-      //   });
+
+      //   //         rating = { $gt: value };
+      //   //         break;
+      //   //       case 'equals':
+      //   //         rating = { $eq: value };
+      //   //         break;
+      //   //       case 'lessThan':
+      //   //         rating = { $lt: value };
+      //   //         break;
+      //   //     }
+      //   //     tagSpecQuery = {
+      //   //       tagId: id,
+      //   //       rating,
+      //   //     };
       // });
     }
   }
 
-  // const tagId: string = '5e4a9bed68e85b19d155a561';
-  // const query = Tag.find({ _id: tagId });
-  // const promise: Promise<Document[]> = query.exec();
-  // return promise.then((tagDocs: Document[]) => {
-  //   console.log('Query results');
-  //   console.log(tagDocs);
-  //   response.status(201).json({
-  //     success: true,
-  //     data: tagDocs,
-  //   });
-  // });
+    // const tagId: string = '5e4a9bed68e85b19d155a561';
+    // const query = Tag.find({ _id: tagId });
+    // const promise: Promise<Document[]> = query.exec();
+    // return promise.then((tagDocs: Document[]) => {
+    //   console.log('Query results');
+    //   console.log(tagDocs);
+    //   response.status(201).json({
+    //     success: true,
+    //     data: tagDocs,
+    //   });
+    // });
 
-  // _id === id
-  // rating corresponds to value
-  // switch on operator
-  //    equals
-  //      $eq
-  //    greaterThan
-  //      $gt
-  // Tag.find( { _id: tagId, rating: { mongoOperator: value }})
+    // _id === id
+    // rating corresponds to value
+    // switch on operator
+    //    equals
+    //      $eq
+    //    greaterThan
+    //      $gt
+    // Tag.find( { _id: tagId, rating: { mongoOperator: value }})
 
 
-  if (request.body.hasOwnProperty('tagValues')) {
-    const tagValues: any[] = request.body.tagValues;
-    const tagSpecQueries: any[] = [];
-    for (const tagSpec of tagValues) {
-      const { id, operator, value } = tagSpec;
-      console.log('tagSpec:');
-      console.log(tagSpec);
-      let rating: any;
-      switch (operator) {
-        case 'greaterThan':
-          rating = { $gt: value };
-          break;
-        case 'equals':
-          rating = { $eq: value };
-          break;
-        case 'lessThan':
-          rating = { $lt: value };
-          break;
-      }
-      tagSpecQuery = {
-        tagId: id,
-        rating,
-      };
-      console.log('tagSpecQuery');
-      console.log(tagSpecQuery);
-      tagSpecQueries.push(tagSpecQuery);
-    }
+    // if (request.body.hasOwnProperty('tagValues')) {
+    //   const tagValues: any[] = request.body.tagValues;
+    //   const tagSpecQueries: any[] = [];
+    //   for (const tagSpec of tagValues) {
+    //     const { id, operator, value } = tagSpec;
+    //     console.log('tagSpec:');
+    //     console.log(tagSpec);
+    //     let rating: any;
+    //     switch (operator) {
+    //       case 'greaterThan':
+    //         rating = { $gt: value };
+    //         break;
+    //       case 'equals':
+    //         rating = { $eq: value };
+    //         break;
+    //       case 'lessThan':
+    //         rating = { $lt: value };
+    //         break;
+    //     }
+    //     tagSpecQuery = {
+    //       tagId: id,
+    //       rating,
+    //     };
+    //     console.log('tagSpecQuery');
+    //     console.log(tagSpecQuery);
+    //     tagSpecQueries.push(tagSpecQuery);
+    //   }
 
-    const queryExpression2: any = {
-      $and: tagSpecQueries,
-    };
+    //   const queryExpression2: any = {
+    //     $and: tagSpecQueries,
+    //   };
 
-    console.log('queryExpression');
-    console.log(queryExpression2);
+    //   console.log('queryExpression');
+    //   console.log(queryExpression2);
 
-    const query = TaggedEntityRating.find(queryExpression2);
+    //   const query = TaggedEntityRating.find(queryExpression2);
 
-    const promise: Promise<Document[]> = query.exec();
-    return promise.then((tagDocs: Document[]) => {
-      console.log('Query results');
-      console.log(tagDocs);
-      response.status(201).json({
-        success: true,
-        data: tagDocs,
-      });
+    //   const promise: Promise<Document[]> = query.exec();
+    //   return promise.then((tagDocs: Document[]) => {
+    //     console.log('Query results');
+    //     console.log(tagDocs);
+    //     response.status(201).json({
+    //       success: true,
+    //       data: tagDocs,
+    //     });
+    //   });
+
+    // }
+
+    response.status(201).json({
+      success: true,
     });
 
   }
-
-  response.status(201).json({
-    success: true,
-  });
-
-}
 
