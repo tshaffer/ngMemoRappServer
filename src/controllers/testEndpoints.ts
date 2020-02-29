@@ -216,9 +216,18 @@ export function getFilteredRestaurants(request: Request, response: Response, nex
       const { id, operator, value } = tagSpec;
       console.log('tagSpec:');
       console.log(tagSpec);
-      const rating: any = {
-        $gt: value,
-      };
+      let rating: any;
+      switch (operator) {
+        case 'greaterThan':
+          rating = { $gt: value };
+          break;
+        case 'equals':
+          rating = { $eq: value };
+          break;
+        case 'lessThan':
+          rating = { $lt: value };
+          break;
+      }
       queryExpression = {
         tagId: id,
         rating,
