@@ -155,7 +155,7 @@ export function getFilteredRestaurants(request: Request, response: Response, nex
   console.log('getFilteredRestaurants, requestBody:');
   console.log(request.body);
 
-  let queryExpression: any = {};
+  let tagSpecQuery: any = {};
 
   // build query expression
 
@@ -169,7 +169,7 @@ export function getFilteredRestaurants(request: Request, response: Response, nex
       const restaurantCategoryIds: string[] = restaurantCategories.map((restaurantCategory: any) => {
         return restaurantCategory.id;
       });
-      queryExpression = {
+      tagSpecQuery = {
         categoryId: {
           $in: restaurantCategoryIds,
         },
@@ -212,6 +212,7 @@ export function getFilteredRestaurants(request: Request, response: Response, nex
 
   if (request.body.hasOwnProperty('tagValues')) {
     const tagValues: any[] = request.body.tagValues;
+    const tagSpecQueries: any[] = [];
     for (const tagSpec of tagValues) {
       const { id, operator, value } = tagSpec;
       console.log('tagSpec:');
@@ -228,23 +229,34 @@ export function getFilteredRestaurants(request: Request, response: Response, nex
           rating = { $lt: value };
           break;
       }
-      queryExpression = {
+      tagSpecQuery = {
         tagId: id,
         rating,
       };
-      const query = TaggedEntityRating.find(queryExpression);
-
-      const promise: Promise<Document[]> = query.exec();
-      return promise.then((tagDocs: Document[]) => {
-        console.log('Query results');
-        console.log(tagDocs);
-        response.status(201).json({
-          success: true,
-          data: tagDocs,
-        });
-      });
-
+      console.log('tagSpecQuery');
+      console.log(tagSpecQuery);
+      tagSpecQueries.push(tagSpecQuery);
     }
+
+    const queryExpression2: any = {
+      $and: tagSpecQueries,
+    };
+
+    console.log('queryExpression');
+    console.log(queryExpression2);
+
+    const query = TaggedEntityRating.find(queryExpression2);
+
+    const promise: Promise<Document[]> = query.exec();
+    return promise.then((tagDocs: Document[]) => {
+      console.log('Query results');
+      console.log(tagDocs);
+      response.status(201).json({
+        success: true,
+        data: tagDocs,
+      });
+    });
+
   }
 
   response.status(201).json({
@@ -252,3 +264,4 @@ export function getFilteredRestaurants(request: Request, response: Response, nex
   });
 
 }
+
