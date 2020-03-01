@@ -36,8 +36,9 @@ function fetchYelpData(endPoint: string): Promise<any> {
   });
 }
 
-export function fetchYelpBusinessDetails(): Promise<any> {
-  const endPoint: string = 'businesses/a8gk25_MTKdtoOwBsiraDQ';
+export function fetchYelpBusinessDetails(yelpId: string): Promise<any> {
+  // const endPoint: string = 'businesses/a8gk25_MTKdtoOwBsiraDQ';
+  const endPoint: string = 'businesses/' + yelpId;
   return fetchYelpData(endPoint);
 }
 

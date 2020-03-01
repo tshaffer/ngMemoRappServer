@@ -8,7 +8,6 @@ import { fetchYelpBusinessDetails, fetchYelpBusinessByLocation } from './yelp';
 import RestaurantReview from '../models/RestaurantReview';
 import { Document } from 'mongoose';
 import { RestaurantType, TagValueRequest } from '../types';
-// import { filter } from 'lodash';
 
 // users
 export function createUser(request: Request, response: Response, next: any) {
@@ -134,10 +133,20 @@ export function getRestaurantByLocation(request: Request, response: Response): P
   console.log('latitude: ', latitude);
   console.log('longitude: ', longitude);
 
-  // return fetchYelpBusinessDetails().then( (responseData: any) => {
-  //   response.json(responseData);
-  // });
   return fetchYelpBusinessByLocation(latitude, longitude).then((responseData: any) => {
+    response.json(responseData);
+  });
+}
+
+export function getRestaurantByYelpId(request: Request, response: Response): Promise<any> {
+
+  console.log('request.params:');
+  console.log(request.params);
+
+  const yelpId = request.params.yelpId;
+  console.log('yelpId: ', yelpId);
+
+  return fetchYelpBusinessDetails(yelpId).then( (responseData: any) => {
     response.json(responseData);
   });
 }
@@ -182,6 +191,9 @@ export function getFilteredRestaurants(request: Request, response: Response, nex
           return restaurantDoc.toObject();
         });
 
+        console.log('restaurantsFilteredByCategories');
+        console.log(restaurantsFilteredByQuery);
+
         if (request.body.hasOwnProperty('tagValues')) {
           const tagValueRequests: TagValueRequest[] = request.body.tagValues;
           const tagIds: string[] = tagValueRequests.map((tagValue) => {
@@ -194,6 +206,9 @@ export function getFilteredRestaurants(request: Request, response: Response, nex
             // do all tagIds exist in restaurantTagIds?
             return checker(restaurantTagIds, tagIds);
           });
+
+          console.log('restaurantsFilteredByTags');
+          console.log(restaurantsFilteredByTags);
 
           //
           const tagSpecQueries: any[] = [];
@@ -219,8 +234,8 @@ export function getFilteredRestaurants(request: Request, response: Response, nex
             });
           }
 
-          console.log('tagSpecQueries');
-          console.log(tagSpecQueries);
+          // console.log('tagSpecQueries');
+          // console.log(tagSpecQueries);
 
           for (const tagSpecQuerySpec of tagSpecQueries) {
             const tagSpecQuery = TaggedEntityRating.find(tagSpecQuerySpec);
