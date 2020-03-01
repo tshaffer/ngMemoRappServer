@@ -242,10 +242,29 @@ export function getFilteredRestaurants(request: Request, response: Response, nex
           }
 
           performTagSpecQueries(tagSpecQueries)
-            .then( (taggedEntityRatingsDocuments: any[]) => {
+            .then( (taggedEntityRatingsDocuments: any[][]) => {
               console.log('taggedEntityRatingsDocuments');
               console.log(taggedEntityRatingsDocuments);
+
+              const restaurantsFilteredByTaggedEntityRatings = restaurantsFilteredByTags.filter((restaurant, index, arr) => {
+                console.log(restaurant);
+                for (const taggedEntityRatingsDocument of taggedEntityRatingsDocuments) {
+                  for (const taggedEntityRatingDocument of taggedEntityRatingsDocument) {
+                    const taggedEntityRating = taggedEntityRatingDocument.toObject();
+                    console.log(taggedEntityRating);
+                    if (taggedEntityRating.tagTargetId !== restaurant._id.toString()) {
+                      return false;
+                    }
+                  }                  
+                }
+                return true;
+              });
+
+              console.log('matching restaurants');
+              console.log(restaurantsFilteredByTaggedEntityRatings);
+
             });
+
 
           // perform further filtering on the restaurants - only take those that where the taggedEntityRatings documents include them 
           // (their restaurantId is in the taggedEntityRatings)
