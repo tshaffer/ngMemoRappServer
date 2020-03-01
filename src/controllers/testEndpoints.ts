@@ -173,9 +173,6 @@ export function getRestaurantsByLatLng(request: Request, response: Response): Pr
 
 export function getFilteredRestaurants(request: Request, response: Response, next: any) {
 
-  console.log('getFilteredRestaurants, requestBody:');
-  console.log(request.body);
-
   let queryExpression: any = {};
 
   // build query expression
@@ -224,8 +221,8 @@ export function getFilteredRestaurants(request: Request, response: Response, nex
           const tagSpecQueries: any[] = [];
           for (const tagSpec of tagValueRequests) {
             const { id, operator, value } = tagSpec;
-            console.log('tagSpec:');
-            console.log(tagSpec);
+            // console.log('tagSpec:');
+            // console.log(tagSpec);
             let rating: any;
             switch (operator) {
               case 'greaterThan':
@@ -244,18 +241,6 @@ export function getFilteredRestaurants(request: Request, response: Response, nex
             });
           }
 
-          // console.log('tagSpecQueries');
-          // console.log(tagSpecQueries);
-
-          // for (const tagSpecQuerySpec of tagSpecQueries) {
-          //   const tagSpecQuery = TaggedEntityRating.find(tagSpecQuerySpec);
-          //   const tagSpecPromise: Promise<Document[]> = tagSpecQuery.exec();
-          //   tagSpecPromise.then((taggedEntityRatings: Document[]) => {
-          //     console.log('taggedEntityRatings documents');
-          //     console.log(taggedEntityRatings);
-          //   });
-          // }
-
           performTagSpecQueries(tagSpecQueries)
             .then( (taggedEntityRatingsDocuments: any[]) => {
               console.log('taggedEntityRatingsDocuments');
@@ -265,8 +250,6 @@ export function getFilteredRestaurants(request: Request, response: Response, nex
           // perform further filtering on the restaurants - only take those that where the taggedEntityRatings documents include them 
           // (their restaurantId is in the taggedEntityRatings)
         }
-
-
 
         response.status(201).json({
           success: true,
@@ -286,10 +269,10 @@ function performTagSpecQueries(tagSpecQueries: any[]): Promise<any[]> {
 
   const performNextTagSpecQuery = (index: number): Promise<any[]> => {
 
-    console.log('performNextTagSpecQuery, index: ' + index);
+    // console.log('performNextTagSpecQuery, index: ' + index);
 
     if (index >= tagSpecQueries.length) {
-      console.log(taggedEntityRatingsDocuments);
+      // console.log(taggedEntityRatingsDocuments);
       return Promise.resolve(taggedEntityRatingsDocuments);
     }
 
@@ -307,98 +290,5 @@ function performTagSpecQueries(tagSpecQueries: any[]): Promise<any[]> {
   return performNextTagSpecQuery(0);
 }
 
-
 // check to see if all elements in target exist in arr
 const checker = (arr: any, target: any) => target.every((v: any) => arr.includes(v));
-
-  // const promise: Promise<Document[]> = query.exec();
-  // return promise.then((restaurantDocs: Document[]) => {
-  //   console.log('Query results');
-  //   console.log(restaurantDocs);
-
-  //   //         rating = { $gt: value };
-  //   //         break;
-  //   //       case 'equals':
-  //   //         rating = { $eq: value };
-  //   //         break;
-  //   //       case 'lessThan':
-  //   //         rating = { $lt: value };
-  //   //         break;
-  //   //     }
-  //   //     tagSpecQuery = {
-  //   //       tagId: id,
-  //   //       rating,
-  //   //     };
-  // });
-
-  // const tagId: string = '5e4a9bed68e85b19d155a561';
-  // const query = Tag.find({ _id: tagId });
-  // const promise: Promise<Document[]> = query.exec();
-  // return promise.then((tagDocs: Document[]) => {
-  //   console.log('Query results');
-  //   console.log(tagDocs);
-  //   response.status(201).json({
-  //     success: true,
-  //     data: tagDocs,
-  //   });
-  // });
-
-  // _id === id
-  // rating corresponds to value
-  // switch on operator
-  //    equals
-  //      $eq
-  //    greaterThan
-  //      $gt
-  // Tag.find( { _id: tagId, rating: { mongoOperator: value }})
-
-
-  // if (request.body.hasOwnProperty('tagValues')) {
-  //   const tagValues: any[] = request.body.tagValues;
-  //   const tagSpecQueries: any[] = [];
-  //   for (const tagSpec of tagValues) {
-  //     const { id, operator, value } = tagSpec;
-  //     console.log('tagSpec:');
-  //     console.log(tagSpec);
-  //     let rating: any;
-  //     switch (operator) {
-  //       case 'greaterThan':
-  //         rating = { $gt: value };
-  //         break;
-  //       case 'equals':
-  //         rating = { $eq: value };
-  //         break;
-  //       case 'lessThan':
-  //         rating = { $lt: value };
-  //         break;
-  //     }
-  //     tagSpecQuery = {
-  //       tagId: id,
-  //       rating,
-  //     };
-  //     console.log('tagSpecQuery');
-  //     console.log(tagSpecQuery);
-  //     tagSpecQueries.push(tagSpecQuery);
-  //   }
-
-  //   const queryExpression2: any = {
-  //     $and: tagSpecQueries,
-  //   };
-
-  //   console.log('queryExpression');
-  //   console.log(queryExpression2);
-
-  //   const query = TaggedEntityRating.find(queryExpression2);
-
-  //   const promise: Promise<Document[]> = query.exec();
-  //   return promise.then((tagDocs: Document[]) => {
-  //     console.log('Query results');
-  //     console.log(tagDocs);
-  //     response.status(201).json({
-  //       success: true,
-  //       data: tagDocs,
-  //     });
-  //   });
-
-  // }
-
