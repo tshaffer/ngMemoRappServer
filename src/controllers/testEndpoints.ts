@@ -7,6 +7,8 @@ import User from '../models/User';
 import { fetchYelpBusinessDetails, fetchYelpBusinessByLocation } from './yelp';
 import RestaurantReview from '../models/RestaurantReview';
 import { Document } from 'mongoose';
+import { RestaurantType, TagValueRequest } from '../types';
+// import { filter } from 'lodash';
 
 // users
 export function createUser(request: Request, response: Response, next: any) {
@@ -163,135 +165,145 @@ export function getFilteredRestaurants(request: Request, response: Response, nex
     const restaurantCategories: any[] = request.body.restaurantCategories;
     if (restaurantCategories.length > 0) {
 
-      // const restaurantCategoryId: string = restaurantCategories[0].id;
-      // const query = Restaurant.find({ categoryId: restaurantCategoryId });
-
       const restaurantCategoryIds: string[] = restaurantCategories.map((restaurantCategory: any) => {
         return restaurantCategory.id;
       });
 
-      const aggregations: any[] = [];
-      aggregations.push( {
-        $lookup:
-        {
-          from: 'restaurants',
-          localField: '_id',
-          foreignField: 'categoryId',
-          as: 'restaurantDocs',
+      queryExpression = {
+        categoryId: {
+          $in: restaurantCategoryIds,
         },
-      });
-
-      const query = RestaurantCategory.aggregate(aggregations);
+      };
+      const query = Restaurant.find(queryExpression);
       const promise: Promise<Document[]> = query.exec();
-      return promise.then((docs: Document[]) => {
-        console.log('Aggregate results');
-        console.log(docs);
+      return promise.then((restaurantDocs: Document[]) => {
+
+        const restaurantsFilteredByQuery: RestaurantType[] = restaurantDocs.map((restaurantDoc) => {
+          return restaurantDoc.toObject();
+        });
+
+
+        if (request.body.hasOwnProperty('tagValues')) {
+          const tagValues: TagValueRequest[] = request.body.tagValues;
+          const tagIds: string[] = tagValues.map( (tagValue) => {
+            return tagValue.id;
+          });
+
+          // get the restaurants that contain all the tags
+          const restaurantsFilteredByTags =  restaurantsFilteredByQuery.filter((restaurant, index, arr) => {
+            const restaurantTagIds: string[] = restaurant.tagIds;
+            // do all tagIds exist in restaurantTagIds?
+            return checker(restaurantTagIds, tagIds);
+          });
+
+          console.log('restaurantsFilteredByTags');
+          console.log(restaurantsFilteredByTags);
+        }
+
+
+
+        response.status(201).json({
+          success: true,
+          data: restaurantDocs,
+        });
       });
-
-
-      // queryExpression = {
-      //   categoryId: {
-      //     $in: restaurantCategoryIds,
-      //   },
-      // };
-      // const query = Restaurant.find(queryExpression);
-
-      // const promise: Promise<Document[]> = query.exec();
-      // return promise.then((restaurantDocs: Document[]) => {
-      //   console.log('Query results');
-      //   console.log(restaurantDocs);
-
-      //   //         rating = { $gt: value };
-      //   //         break;
-      //   //       case 'equals':
-      //   //         rating = { $eq: value };
-      //   //         break;
-      //   //       case 'lessThan':
-      //   //         rating = { $lt: value };
-      //   //         break;
-      //   //     }
-      //   //     tagSpecQuery = {
-      //   //       tagId: id,
-      //   //       rating,
-      //   //     };
-      // });
     }
   }
+  response.status(201).json({
+    success: true,
+  });
+}
 
-    // const tagId: string = '5e4a9bed68e85b19d155a561';
-    // const query = Tag.find({ _id: tagId });
-    // const promise: Promise<Document[]> = query.exec();
-    // return promise.then((tagDocs: Document[]) => {
-    //   console.log('Query results');
-    //   console.log(tagDocs);
-    //   response.status(201).json({
-    //     success: true,
-    //     data: tagDocs,
-    //   });
-    // });
+const checker = (arr: any, target: any) => target.every((v: any) => arr.includes(v));
 
-    // _id === id
-    // rating corresponds to value
-    // switch on operator
-    //    equals
-    //      $eq
-    //    greaterThan
-    //      $gt
-    // Tag.find( { _id: tagId, rating: { mongoOperator: value }})
+  // const promise: Promise<Document[]> = query.exec();
+  // return promise.then((restaurantDocs: Document[]) => {
+  //   console.log('Query results');
+  //   console.log(restaurantDocs);
+
+  //   //         rating = { $gt: value };
+  //   //         break;
+  //   //       case 'equals':
+  //   //         rating = { $eq: value };
+  //   //         break;
+  //   //       case 'lessThan':
+  //   //         rating = { $lt: value };
+  //   //         break;
+  //   //     }
+  //   //     tagSpecQuery = {
+  //   //       tagId: id,
+  //   //       rating,
+  //   //     };
+  // });
+
+  // const tagId: string = '5e4a9bed68e85b19d155a561';
+  // const query = Tag.find({ _id: tagId });
+  // const promise: Promise<Document[]> = query.exec();
+  // return promise.then((tagDocs: Document[]) => {
+  //   console.log('Query results');
+  //   console.log(tagDocs);
+  //   response.status(201).json({
+  //     success: true,
+  //     data: tagDocs,
+  //   });
+  // });
+
+  // _id === id
+  // rating corresponds to value
+  // switch on operator
+  //    equals
+  //      $eq
+  //    greaterThan
+  //      $gt
+  // Tag.find( { _id: tagId, rating: { mongoOperator: value }})
 
 
-    // if (request.body.hasOwnProperty('tagValues')) {
-    //   const tagValues: any[] = request.body.tagValues;
-    //   const tagSpecQueries: any[] = [];
-    //   for (const tagSpec of tagValues) {
-    //     const { id, operator, value } = tagSpec;
-    //     console.log('tagSpec:');
-    //     console.log(tagSpec);
-    //     let rating: any;
-    //     switch (operator) {
-    //       case 'greaterThan':
-    //         rating = { $gt: value };
-    //         break;
-    //       case 'equals':
-    //         rating = { $eq: value };
-    //         break;
-    //       case 'lessThan':
-    //         rating = { $lt: value };
-    //         break;
-    //     }
-    //     tagSpecQuery = {
-    //       tagId: id,
-    //       rating,
-    //     };
-    //     console.log('tagSpecQuery');
-    //     console.log(tagSpecQuery);
-    //     tagSpecQueries.push(tagSpecQuery);
-    //   }
+  // if (request.body.hasOwnProperty('tagValues')) {
+  //   const tagValues: any[] = request.body.tagValues;
+  //   const tagSpecQueries: any[] = [];
+  //   for (const tagSpec of tagValues) {
+  //     const { id, operator, value } = tagSpec;
+  //     console.log('tagSpec:');
+  //     console.log(tagSpec);
+  //     let rating: any;
+  //     switch (operator) {
+  //       case 'greaterThan':
+  //         rating = { $gt: value };
+  //         break;
+  //       case 'equals':
+  //         rating = { $eq: value };
+  //         break;
+  //       case 'lessThan':
+  //         rating = { $lt: value };
+  //         break;
+  //     }
+  //     tagSpecQuery = {
+  //       tagId: id,
+  //       rating,
+  //     };
+  //     console.log('tagSpecQuery');
+  //     console.log(tagSpecQuery);
+  //     tagSpecQueries.push(tagSpecQuery);
+  //   }
 
-    //   const queryExpression2: any = {
-    //     $and: tagSpecQueries,
-    //   };
+  //   const queryExpression2: any = {
+  //     $and: tagSpecQueries,
+  //   };
 
-    //   console.log('queryExpression');
-    //   console.log(queryExpression2);
+  //   console.log('queryExpression');
+  //   console.log(queryExpression2);
 
-    //   const query = TaggedEntityRating.find(queryExpression2);
+  //   const query = TaggedEntityRating.find(queryExpression2);
 
-    //   const promise: Promise<Document[]> = query.exec();
-    //   return promise.then((tagDocs: Document[]) => {
-    //     console.log('Query results');
-    //     console.log(tagDocs);
-    //     response.status(201).json({
-    //       success: true,
-    //       data: tagDocs,
-    //     });
-    //   });
+  //   const promise: Promise<Document[]> = query.exec();
+  //   return promise.then((tagDocs: Document[]) => {
+  //     console.log('Query results');
+  //     console.log(tagDocs);
+  //     response.status(201).json({
+  //       success: true,
+  //       data: tagDocs,
+  //     });
+  //   });
 
-    // }
-
-    response.status(201).json({
-      success: true,
-    });
-
-  }
+  // }
 
