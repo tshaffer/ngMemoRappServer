@@ -67,12 +67,36 @@ export function createTaggedEntityRating(request: Request, response: Response, n
 export function createRestaurant(request: Request, response: Response, next: any) {
   console.log('createRestaurant');
   console.log(request.body);
-  Restaurant.create(request.body).then((restaurant: any) => {
-    response.status(201).json({
-      success: true,
-      data: restaurant,
+
+  const yelpId = request.body.yelpId;
+  return fetchYelpBusinessDetails(yelpId).then((yelpBusinessDetails: any) => {
+    console.log(yelpBusinessDetails);
+    // response.json(responseData);
+
+    const restaurant: any = {
+      categoryId: request.body.categoryId,
+      yelpBusinessDetails,
+    };
+    Restaurant.create(restaurant).then((createdRestaurant: any) => {
+      response.status(201).json({
+        success: true,
+        data: createdRestaurant,
+      });
     });
+
+    // response.status(201).json({
+    //   success: true,
+    // });
+
   });
+
+
+  // Restaurant.create(request.body).then((restaurant: any) => {
+  //   response.status(201).json({
+  //     success: true,
+  //     data: restaurant,
+  //   });
+  // });
 }
 
 export function updateRestaurant(request: Request, response: Response, next: any) {
@@ -146,7 +170,7 @@ export function getRestaurantByYelpId(request: Request, response: Response): Pro
   const yelpId = request.params.yelpId;
   console.log('yelpId: ', yelpId);
 
-  return fetchYelpBusinessDetails(yelpId).then( (responseData: any) => {
+  return fetchYelpBusinessDetails(yelpId).then((responseData: any) => {
     response.json(responseData);
   });
 }
