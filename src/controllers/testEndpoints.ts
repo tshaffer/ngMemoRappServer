@@ -71,7 +71,6 @@ export function createRestaurant(request: Request, response: Response, next: any
   const yelpId = request.body.yelpId;
   return fetchYelpBusinessDetails(yelpId).then((yelpBusinessDetails: any) => {
     console.log(yelpBusinessDetails);
-    // response.json(responseData);
 
     const restaurant: any = {
       categoryId: request.body.categoryId,
@@ -83,20 +82,7 @@ export function createRestaurant(request: Request, response: Response, next: any
         data: createdRestaurant,
       });
     });
-
-    // response.status(201).json({
-    //   success: true,
-    // });
-
   });
-
-
-  // Restaurant.create(request.body).then((restaurant: any) => {
-  //   response.status(201).json({
-  //     success: true,
-  //     data: restaurant,
-  //   });
-  // });
 }
 
 export function updateRestaurant(request: Request, response: Response, next: any) {
@@ -261,14 +247,23 @@ export function getFilteredRestaurants(request: Request, response: Response, nex
           // console.log('tagSpecQueries');
           // console.log(tagSpecQueries);
 
-          for (const tagSpecQuerySpec of tagSpecQueries) {
-            const tagSpecQuery = TaggedEntityRating.find(tagSpecQuerySpec);
-            const tagSpecPromise: Promise<Document[]> = tagSpecQuery.exec();
-            tagSpecPromise.then((taggedEntityRatings: Document[]) => {
-              console.log('taggedEntityRatings documents');
-              console.log(taggedEntityRatings);
+          // for (const tagSpecQuerySpec of tagSpecQueries) {
+          //   const tagSpecQuery = TaggedEntityRating.find(tagSpecQuerySpec);
+          //   const tagSpecPromise: Promise<Document[]> = tagSpecQuery.exec();
+          //   tagSpecPromise.then((taggedEntityRatings: Document[]) => {
+          //     console.log('taggedEntityRatings documents');
+          //     console.log(taggedEntityRatings);
+          //   });
+          // }
+
+          performTagSpecQueries(tagSpecQueries)
+            .then( (taggedEntityRatingsDocuments: any[]) => {
+              console.log('taggedEntityRatingsDocuments');
+              console.log(taggedEntityRatingsDocuments);
             });
-          }
+
+          // perform further filtering on the restaurants - only take those that where the taggedEntityRatings documents include them 
+          // (their restaurantId is in the taggedEntityRatings)
         }
 
 
@@ -284,6 +279,34 @@ export function getFilteredRestaurants(request: Request, response: Response, nex
     success: true,
   });
 }
+
+function performTagSpecQueries(tagSpecQueries: any[]): Promise<any[]> {
+
+  const taggedEntityRatingsDocuments: any[] = [];
+
+  const performNextTagSpecQuery = (index: number): Promise<any[]> => {
+
+    console.log('performNextTagSpecQuery, index: ' + index);
+
+    if (index >= tagSpecQueries.length) {
+      console.log(taggedEntityRatingsDocuments);
+      return Promise.resolve(taggedEntityRatingsDocuments);
+    }
+
+    const querySpec: any = tagSpecQueries[index];
+
+    const tagSpecQuery = TaggedEntityRating.find(querySpec);
+    const tagSpecPromise: Promise<Document[]> = tagSpecQuery.exec();
+    return tagSpecPromise
+      .then((taggedEntityRatings: Document[]) => {
+        taggedEntityRatingsDocuments.push(taggedEntityRatings);
+        return performNextTagSpecQuery(index + 1);
+      });
+  };
+
+  return performNextTagSpecQuery(0);
+}
+
 
 // check to see if all elements in target exist in arr
 const checker = (arr: any, target: any) => target.every((v: any) => arr.includes(v));
