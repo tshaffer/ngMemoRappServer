@@ -182,22 +182,54 @@ export function getFilteredRestaurants(request: Request, response: Response, nex
           return restaurantDoc.toObject();
         });
 
-
         if (request.body.hasOwnProperty('tagValues')) {
-          const tagValues: TagValueRequest[] = request.body.tagValues;
-          const tagIds: string[] = tagValues.map( (tagValue) => {
+          const tagValueRequests: TagValueRequest[] = request.body.tagValues;
+          const tagIds: string[] = tagValueRequests.map((tagValue) => {
             return tagValue.id;
           });
 
           // get the restaurants that contain all the tags
-          const restaurantsFilteredByTags =  restaurantsFilteredByQuery.filter((restaurant, index, arr) => {
+          const restaurantsFilteredByTags = restaurantsFilteredByQuery.filter((restaurant, index, arr) => {
             const restaurantTagIds: string[] = restaurant.tagIds;
             // do all tagIds exist in restaurantTagIds?
             return checker(restaurantTagIds, tagIds);
           });
 
-          console.log('restaurantsFilteredByTags');
-          console.log(restaurantsFilteredByTags);
+          //
+          const tagSpecQueries: any[] = [];
+          for (const tagSpec of tagValueRequests) {
+            const { id, operator, value } = tagSpec;
+            console.log('tagSpec:');
+            console.log(tagSpec);
+            let rating: any;
+            switch (operator) {
+              case 'greaterThan':
+                rating = { $gt: value };
+                break;
+              case 'equals':
+                rating = { $eq: value };
+                break;
+              case 'lessThan':
+                rating = { $lt: value };
+                break;
+            }
+            tagSpecQueries.push({
+              tagId: id,
+              rating,
+            });
+          }
+
+          console.log('tagSpecQueries');
+          console.log(tagSpecQueries);
+
+          for (const tagSpecQuerySpec of tagSpecQueries) {
+            const tagSpecQuery = TaggedEntityRating.find(tagSpecQuerySpec);
+            const tagSpecPromise: Promise<Document[]> = tagSpecQuery.exec();
+            tagSpecPromise.then((taggedEntityRatings: Document[]) => {
+              console.log('taggedEntityRatings documents');
+              console.log(taggedEntityRatings);
+            });
+          }
         }
 
 
@@ -214,6 +246,7 @@ export function getFilteredRestaurants(request: Request, response: Response, nex
   });
 }
 
+// check to see if all elements in target exist in arr
 const checker = (arr: any, target: any) => target.every((v: any) => arr.includes(v));
 
   // const promise: Promise<Document[]> = query.exec();
