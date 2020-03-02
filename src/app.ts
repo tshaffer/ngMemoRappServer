@@ -5,7 +5,6 @@ import morgan from 'morgan';
 
 import { Routes } from './routes/routes';
 import restaurantsRouter from './routes/restaurants';
-import tagsRouter from './routes/tags';
 import usersRouter from './routes/users';
 
 class App {
@@ -39,7 +38,6 @@ class App {
     
     this.route.routes(this.app);
     this.app.use('/api/v1', restaurantsRouter);
-    this.app.use('/api/v1', tagsRouter);
     this.app.use('/api/v1', usersRouter);
 
 

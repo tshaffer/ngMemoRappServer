@@ -2,19 +2,39 @@ import * as mongoose from 'mongoose';
 
 const Schema = mongoose.Schema;
 
+// https://stackoverflow.com/questions/29299477/how-to-create-and-use-enum-in-mongoose
 const RestaurantSchema = new Schema(
   {
-    // yelpId: { type: String, required: true },        // Yelp endpoint: /businesses/{id}. Details associated with this restaurant
+    name: { type: String, required: true },             // possibly duplicates yelp name
+    category: { type: String, required: true },         // Restaurant category: pizza, burritos, sandwiches, etc. Should it be an array of categories?
+    overallRating: { type: Number, required: true},     // in db, or calculated from reviews?
+    foodRating: { type: Number, required: true},        // in db, or calculated from reviews?
+    serviceRating: { type: Number, required: true},     // in db, or calculated from reviews?
     yelpBusinessDetails: { type: Schema.Types.Mixed},   // Details associated with this restaurant
-    categoryId: { type: String, required: true },       // Restaurant category: pizza, burritos, sandwiches, etc. Should it be an array of categories?
-                                                        //    and should category be a system tag?
-    tagIds: [String],                                   // Factual information associated with a restaurant (independent of a review). Not part of the yelp data.
-                                                        // Does it just refer to things that are rated, or shouldn't it also include booleans?
-                                                        //    booleans
-                                                        //        take out available
-                                                        //    ratable
-                                                        //        menu items
-                                                        //    
+    
+    // https://stackoverflow.com/questions/42019679/object-type-in-mongoose
+    menuItems: [{
+      name: { type: String, required: true },
+    }],
+
+    // https://mongoosejs.com/docs/customschematypes.html
+    reviews: [{
+      user: { type: String, required: true },
+      comments: { type: String, required: true },
+      overallRating: { type: Number},
+      foodRating: { type: Number},
+      serviceRating: { type: Number},
+      menuItemRatings: [{
+        menuItem: { type: String, required: true },
+        rating: { type: Number },
+        comments: { type: String },
+      }],
+    }],
+    visitReviews: [{
+      user: { type: String, required: true },
+      date: { type: Date, default: Date.now, required: true },
+      comments: { type: String, required: true },
+    }],
   },
 );
 
