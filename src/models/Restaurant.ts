@@ -6,10 +6,11 @@ const Schema = mongoose.Schema;
 const RestaurantSchema = new Schema(
   {
     name: { type: String, required: true },             // possibly duplicates yelp name
+    // or categoryId?
     category: { type: String, required: true },         // Restaurant category: pizza, burritos, sandwiches, etc. Should it be an array of categories?
-    overallRating: { type: Number, required: true},     // in db, or calculated from reviews?
-    foodRating: { type: Number, required: true},        // in db, or calculated from reviews?
-    serviceRating: { type: Number, required: true},     // in db, or calculated from reviews?
+    overallRating: { type: Number },                    // in db, or calculated from reviews?
+    foodRating: { type: Number },                       // in db, or calculated from reviews?
+    serviceRating: { type: Number },                    // in db, or calculated from reviews?
     yelpBusinessDetails: { type: Schema.Types.Mixed},   // Details associated with this restaurant
     
     // https://stackoverflow.com/questions/42019679/object-type-in-mongoose

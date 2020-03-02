@@ -40,6 +40,19 @@ export function createRestaurant(request: Request, response: Response, next: any
   console.log('createRestaurant');
   console.log(request.body);
 
+  Restaurant.create(request.body).then((restaurant: any) => {
+    response.status(201).json({
+      success: true,
+      data: restaurant,
+    });
+  });
+}
+
+
+export function updateRequestWithYelpDataPlaceholder(request: Request, response: Response, next: any) {
+  console.log('createRestaurant');
+  console.log(request.body);
+
   const yelpId = request.body.yelpId;
   return fetchYelpBusinessDetails(yelpId).then((yelpBusinessDetails: any) => {
     console.log(yelpBusinessDetails);
