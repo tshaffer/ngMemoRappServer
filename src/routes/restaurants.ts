@@ -9,6 +9,8 @@ import {
   updateRestaurant,
   getFilteredRestaurants,
   getRestaurantByYelpId,
+  createMenuItem,
+  addRestaurantMenuItem,
 } from '../controllers/testEndpoints';
 
 // test endpoints
@@ -16,9 +18,14 @@ restaurantsRouter.get('/restaurants/:latitude/:longitude', getRestaurantByLocati
 restaurantsRouter.get('/restaurants/', getRestaurantsByLatLng);
 restaurantsRouter.get('/restaurantsByYelpId/:yelpId', getRestaurantByYelpId);
 
-restaurantsRouter.post('/restaurant', createRestaurant);
+restaurantsRouter.post('/menuItem', createMenuItem);
 restaurantsRouter.post('/restaurantCategory', createRestaurantCategory);
+restaurantsRouter.post('/restaurant', createRestaurant);
+
+restaurantsRouter.post('/restaurantMenuItem/:id', addRestaurantMenuItem);
+
 restaurantsRouter.post('/filteredRestaurants', getFilteredRestaurants);
+
 
 restaurantsRouter.patch('/restaurant/:id', updateRestaurant);
 

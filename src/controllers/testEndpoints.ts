@@ -2,10 +2,20 @@ import { Request, Response } from 'express';
 import Restaurant from '../models/Restaurant';
 import User from '../models/User';
 import { fetchYelpBusinessDetails, fetchYelpBusinessByLocation } from './yelp';
-import { Document } from 'mongoose';
-import { RestaurantType, TagValueRequest } from '../types';
+// import { Document } from 'mongoose';
+// import { RestaurantType, TagValueRequest } from '../types';
+import RestaurantCategory from '../models/RestaurantCategory';
+import MenuItem from '../models/MenuItem';
 
 // users
+/*  POST
+    {{URL}}/api/v1/user
+    Body
+      {
+        "name": "Ted",
+        "password": "letMeIn"
+      }
+*/
 export function createUser(request: Request, response: Response, next: any) {
   console.log('createUser');
   console.log(request.body);
@@ -17,6 +27,13 @@ export function createUser(request: Request, response: Response, next: any) {
   });
 }
 
+/*  PATCH
+    {{URL}}/api/v1/user/<userId>
+    Body
+    {
+    	"password": "letMeIn69"
+    }
+*/
 export function updateUser(request: Request, response: Response, next: any) {
   console.log('updateUser');
   console.log(request.body);
@@ -35,7 +52,58 @@ export function updateUser(request: Request, response: Response, next: any) {
   });
 }
 
-// restaurants
+// MENU ITEMS
+
+/*  POST
+    {{URL}}/api/v1/menuItem
+    Body
+      {
+        "menuItemName": "Meatball Sandwich",
+        "description": "<whatever>" (optional)
+      }
+*/
+export function createMenuItem(request: Request, response: Response, next: any) {
+  console.log('createMenuItem');
+  console.log(request.body);
+  MenuItem.create(request.body).then((menuItem: any) => {
+    response.status(201).json({
+      success: true,
+      data: menuItem,
+    });
+  });
+}
+
+// RESTAURANT CATEGORIES
+
+/* POST
+    {{URL}}/api/v1/menuItem
+    Body
+      {
+        "menuItemName": "Meatball Sandwich",
+        "description": "<whatever>" (optional)
+      }
+*/
+export function createRestaurantCategory(request: Request, response: Response, next: any) {
+  console.log('createRestaurantCategory');
+  console.log(request.body);
+  RestaurantCategory.create(request.body).then((restaurantCategory: any) => {
+    response.status(201).json({
+      success: true,
+      data: restaurantCategory,
+    });
+  });
+}
+
+
+// RESTAURANTS
+/*  POST
+    {{URL}}/api/v1/restaurant
+    Body
+    {
+      "name": "La Costeña",
+      "category": "Burritos"
+    }
+*/
 export function createRestaurant(request: Request, response: Response, next: any) {
   console.log('createRestaurant');
   console.log(request.body);
@@ -48,9 +116,32 @@ export function createRestaurant(request: Request, response: Response, next: any
   });
 }
 
+/*  PATCH
+    {{URL}}/api/v1/restaurant/<restaurant id>>
+    {
+      '<restaurant property>': <restaurant property value>
+    }
+*/
+export function updateRestaurant(request: Request, response: Response, next: any) {
+  console.log('updateRestaurant');
+  console.log(request.body);
+
+  Restaurant.findById(request.params.id, (err, restaurant) => {
+    if (request.body._id) {
+      delete request.body._id;
+    }
+    for (const b in request.body) {
+      if (request.body.hasOwnProperty(b)) {
+        (restaurant as any)[b] = request.body[b];
+      }
+    }
+    restaurant.save();
+    response.json(restaurant);
+  });
+}
 
 export function updateRequestWithYelpDataPlaceholder(request: Request, response: Response, next: any) {
-  console.log('createRestaurant');
+  console.log('updateRequestWithYelpData');
   console.log(request.body);
 
   const yelpId = request.body.yelpId;
@@ -70,34 +161,33 @@ export function updateRequestWithYelpDataPlaceholder(request: Request, response:
   });
 }
 
-export function updateRestaurant(request: Request, response: Response, next: any) {
-  console.log('updateRestaurant');
+/*  POST
+    {{URL}}/api/v1/restaurant/<restaurant id>
+*/
+export function addRestaurantMenuItem(request: Request, response: Response, next: any) {
+  console.log('addRestaurantMenuItem');
   console.log(request.body);
 
   Restaurant.findById(request.params.id, (err, restaurant) => {
+    debugger;
     if (request.body._id) {
       delete request.body._id;
     }
-    for (const b in request.body) {
-      if (request.body.hasOwnProperty(b)) {
-        (restaurant as any)[b] = request.body[b];
-      }
-    }
+    (restaurant as any).menuItems.push({ menuItemName: request.body.menuItemName.toString() });
     restaurant.save();
     response.json(restaurant);
   });
 }
 
-// restaurant categories
-export function createRestaurantCategory(request: Request, response: Response, next: any) {
-  console.log('createRestaurantCategory');
+
+export function addRestaurantReview(request: Request, response: Response, next: any) {
+  console.log('addRestaurantReview');
   console.log(request.body);
-  // RestaurantCategory.create(request.body).then((restaurantCategory: any) => {
-  //   response.status(201).json({
-  //     success: true,
-  //     data: restaurantCategory,
-  //   });
-  // });
+}
+
+export function addRestaurantVisitReview(request: Request, response: Response, next: any) {
+  console.log('addRestaurantVisitReview');
+  console.log(request.body);
 }
 
 export function getRestaurantByLocation(request: Request, response: Response): Promise<any> {
