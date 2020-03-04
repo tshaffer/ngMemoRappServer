@@ -14,6 +14,7 @@ import MenuItem from '../models/MenuItem';
       {
         "name": "Ted",
         "password": "letMeIn"
+        "email": "ted@pizza.com"
       }
 */
 export function createUser(request: Request, response: Response, next: any) {
@@ -140,6 +141,26 @@ export function updateRestaurant(request: Request, response: Response, next: any
   });
 }
 
+export function removeRestaurantProperty(request: Request, response: Response, next: any) {
+  console.log('removeRestaurantProperty');
+  console.log(request.body);
+
+  Restaurant.findById(request.params.id, (err, restaurant) => {
+    if (request.body._id) {
+      delete request.body._id;
+    }
+    for (const b in request.body) {
+      if (request.body.hasOwnProperty(b)) {
+        // restaurant.set(b, null);
+        (restaurant as any)[b] = undefined;
+      }
+    }
+    restaurant.save();
+    response.json(restaurant);
+  });
+}
+
+// No route currently accesses this function
 export function updateRequestWithYelpDataPlaceholder(request: Request, response: Response, next: any) {
   console.log('updateRequestWithYelpData');
   console.log(request.body);
@@ -169,11 +190,10 @@ export function addRestaurantMenuItem(request: Request, response: Response, next
   console.log(request.body);
 
   Restaurant.findById(request.params.id, (err, restaurant) => {
-    debugger;
     if (request.body._id) {
       delete request.body._id;
     }
-    (restaurant as any).menuItems.push({ menuItemName: request.body.menuItemName.toString() });
+    (restaurant as any).menuItemNames.push(request.body.menuItemName.toString());
     restaurant.save();
     response.json(restaurant);
   });

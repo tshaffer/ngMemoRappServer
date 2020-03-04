@@ -11,6 +11,7 @@ import {
   getRestaurantByYelpId,
   createMenuItem,
   addRestaurantMenuItem,
+  removeRestaurantProperty,
 } from '../controllers/testEndpoints';
 
 // test endpoints
@@ -23,6 +24,8 @@ restaurantsRouter.post('/restaurantCategory', createRestaurantCategory);
 restaurantsRouter.post('/restaurant', createRestaurant);
 
 restaurantsRouter.post('/restaurantMenuItem/:id', addRestaurantMenuItem);
+
+restaurantsRouter.post('/removeRestaurantProperty/:id', removeRestaurantProperty);
 
 restaurantsRouter.post('/filteredRestaurants', getFilteredRestaurants);
 
