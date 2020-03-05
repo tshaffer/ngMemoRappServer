@@ -2,10 +2,13 @@ import { Request, Response } from 'express';
 import Restaurant from '../models/Restaurant';
 import User from '../models/User';
 import { fetchYelpBusinessDetails, fetchYelpBusinessByLocation } from './yelp';
-// import { Document } from 'mongoose';
+import { Document } from 'mongoose';
 // import { RestaurantType, TagValueRequest } from '../types';
 import RestaurantCategory from '../models/RestaurantCategory';
 import MenuItem from '../models/MenuItem';
+
+import { UserEntity } from '../types';
+import { createUserDocument } from './dbInterface';
 
 // users
 /*  POST
@@ -20,12 +23,24 @@ import MenuItem from '../models/MenuItem';
 export function createUser(request: Request, response: Response, next: any) {
   console.log('createUser');
   console.log(request.body);
-  User.create(request.body).then((user: any) => {
-    response.status(201).json({
-      success: true,
-      data: user,
+  const { userName, password, email } = request.body;
+  const userEntity: UserEntity = {
+    userName,
+    password,
+    email,
+  };
+  createUserDocument(userEntity)
+    .then((userDoc) => {
+      const userDocument = userDoc as Document;
+      console.log('added userDocument');
+      console.log(userDocument);
+      console.log(userDocument.toObject());
+
+      response.status(201).json({
+        success: true,
+        data: userDocument,
+      });
     });
-  });
 }
 
 /*  PATCH
