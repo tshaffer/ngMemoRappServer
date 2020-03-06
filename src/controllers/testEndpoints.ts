@@ -7,8 +7,8 @@ import { Document } from 'mongoose';
 import RestaurantCategory from '../models/RestaurantCategory';
 import MenuItem from '../models/MenuItem';
 
-import { UserEntity } from '../types';
-import { createUserDocument } from './dbInterface';
+import { UserEntity, RestaurantCategoryEntity, MenuItemEntity } from '../types';
+import { createUserDocument, createMenuItemDocument, createRestaurantCategoryDocument } from './dbInterface';
 
 // users
 /*  POST
@@ -81,12 +81,23 @@ export function updateUser(request: Request, response: Response, next: any) {
 export function createMenuItem(request: Request, response: Response, next: any) {
   console.log('createMenuItem');
   console.log(request.body);
-  MenuItem.create(request.body).then((menuItem: any) => {
-    response.status(201).json({
-      success: true,
-      data: menuItem,
+  const { menuItemName, description } = request.body;
+  const menuItemEntity: MenuItemEntity = {
+    menuItemName,
+    description,
+  };
+  createMenuItemDocument(menuItemEntity)
+    .then((menuItemDoc) => {
+      const menuItemDocument = menuItemDoc as Document;
+      console.log('added menuItemDocument');
+      console.log(menuItemDocument);
+      console.log(menuItemDocument.toObject());
+
+      response.status(201).json({
+        success: true,
+        data: menuItemDocument,
+      });
     });
-  });
 }
 
 // RESTAURANT CATEGORIES
@@ -102,12 +113,23 @@ export function createMenuItem(request: Request, response: Response, next: any) 
 export function createRestaurantCategory(request: Request, response: Response, next: any) {
   console.log('createRestaurantCategory');
   console.log(request.body);
-  RestaurantCategory.create(request.body).then((restaurantCategory: any) => {
-    response.status(201).json({
-      success: true,
-      data: restaurantCategory,
+  const { categoryName, description } = request.body;
+  const restaurantCategoryEntity: RestaurantCategoryEntity = {
+    categoryName,
+    description,
+  };
+  createRestaurantCategoryDocument(restaurantCategoryEntity)
+    .then((restaurantCategoryDoc) => {
+      const restaurantCategoryDocument = restaurantCategoryDoc as Document;
+      console.log('added restaurantCategoryDocument');
+      console.log(restaurantCategoryDocument);
+      console.log(restaurantCategoryDocument.toObject());
+
+      response.status(201).json({
+        success: true,
+        data: restaurantCategoryDocument,
+      });
     });
-  });
 }
 
 
