@@ -303,11 +303,12 @@ const checker = (arr: any, target: any) => target.every((v: any) => arr.includes
 
 
 export const populateUsers = () => {
-  return createUserDocuments([
+  const userEntities: UserEntity[] = [
     { userName: 'ted', password: 'letTedIn', email: 'ted@pizza.com' },
     { userName: 'lori', password: 'letLoriIn', email: 'lori@peony.com' },
     { userName: 'rachel', password: 'letRachelIn', email: 'rachel@babies.com' },
-  ]);
+  ];
+  return createUserDocuments(userEntities);
 };
 
 export const populateDb = (equest: Request, response: Response, next: any) => {
