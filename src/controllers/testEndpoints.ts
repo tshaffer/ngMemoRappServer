@@ -11,6 +11,8 @@ import { UserEntity, RestaurantCategoryEntity, MenuItemEntity } from '../types';
 import {
   createUserDocument,
   createUserDocuments,
+  createRestaurantCategoryDocuments,
+  createMenuItemDocuments,
   createMenuItemDocument,
   createRestaurantCategoryDocument,
 } from './dbInterface';
@@ -311,13 +313,45 @@ export const populateUsers = () => {
   return createUserDocuments(userEntities);
 };
 
-export const populateDb = (equest: Request, response: Response, next: any) => {
+export const populateRestaurantCategories = () => {
+  const restaurantCategoryEntities: RestaurantCategoryEntity[] = [
+    { categoryName: 'Burritos', description: 'taqueria' },
+    { categoryName: 'Pizza', description: 'pizza and other italian favorites' },
+    { categoryName: 'Sandwiches', description: 'Place that serves sandwiches.' },
+    { categoryName: 'Coffee', description: 'Lattes, etc.' },
+    { categoryName: 'Ice Cream', description: 'cones, milk shakes, etc.' },
+  ];
+  return createRestaurantCategoryDocuments(restaurantCategoryEntities);
+};
+
+export const populateMenuItems = () => {
+  const menuItemEntities: MenuItemEntity[] = [
+    { menuItemName: 'Meatball Sandwich' },
+    { menuItemName: 'Macaroni & Cheese' },
+  ];
+  return createMenuItemDocuments(menuItemEntities);
+};
+
+export const populateDb = (request: Request, response: Response, next: any) => {
   populateUsers()
-    .then( (docs: Document[]) => {
-      response.status(201).json({
-        users: docs,
-        success: true,
-      });
-         
+    .then((userDocuments: Document[]) => {
+      return populateRestaurantCategories()
+        .then((restaurantCategoryDocuments: Document[]) => {
+          return populateMenuItems()
+            .then((menuItemDocuments: Document[]) => {
+              console.log('userDocuments');
+              console.log(userDocuments);
+              console.log('restaurantCategories');
+              console.log(restaurantCategoryDocuments);
+              console.log('menuItems');
+              console.log(menuItemDocuments);
+              response.status(201).json({
+                success: true,
+                users: userDocuments,
+                restaurantCategories: restaurantCategoryDocuments,
+                menuItems: menuItemDocuments,
+              });
+            });
+        });
     });
 };

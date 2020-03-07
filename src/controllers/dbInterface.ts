@@ -24,6 +24,36 @@ export const createUserDocuments = (userDocuments: UserEntity[]): Promise<Docume
   });
 };
 
+export const createRestaurantCategoryDocuments = (restaurantCategories: RestaurantCategoryEntity[]): Promise<Document[]> => {
+  return new Promise((resolve: any, reject: any) => {
+    RestaurantCategory.collection.insert(restaurantCategories, (err, docs) => {
+      if (err) {
+        console.log(err);
+        reject(err);
+      }
+      else {
+        console.log(docs);
+        resolve(docs);
+      }
+    });
+  });
+};
+
+export const createMenuItemDocuments = (menuItems: MenuItemEntity[]): Promise<Document[]> => {
+  return new Promise((resolve: any, reject: any) => {
+    MenuItem.collection.insert(menuItems, (err, docs) => {
+      if (err) {
+        console.log(err);
+        reject(err);
+      }
+      else {
+        console.log(docs);
+        resolve(docs);
+      }
+    });
+  });
+};
+
 // export const createUserDocument = (userEntity: UserEntity): Promise<Document | void> => {
 export const createUserDocument = (userEntity: UserEntity): Promise<any> => {
   return User.create(userEntity)
