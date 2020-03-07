@@ -9,6 +9,21 @@ import User from '../models/User';
 import RestaurantCategory from '../models/RestaurantCategory';
 import MenuItem from '../models/MenuItem';
 
+export const createUserDocuments = (userDocuments: UserEntity[]): Promise<Document[]> => {
+  return new Promise((resolve: any, reject: any) => {
+    User.collection.insert(userDocuments, (err, docs) => {
+      if (err) {
+        console.log(err);
+        reject(err);
+      }
+      else {
+        console.log(docs);
+        resolve(docs);
+      }
+    });
+  });
+};
+
 // export const createUserDocument = (userEntity: UserEntity): Promise<Document | void> => {
 export const createUserDocument = (userEntity: UserEntity): Promise<any> => {
   return User.create(userEntity)

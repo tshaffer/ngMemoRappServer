@@ -8,7 +8,12 @@ import RestaurantCategory from '../models/RestaurantCategory';
 import MenuItem from '../models/MenuItem';
 
 import { UserEntity, RestaurantCategoryEntity, MenuItemEntity } from '../types';
-import { createUserDocument, createMenuItemDocument, createRestaurantCategoryDocument } from './dbInterface';
+import {
+  createUserDocument,
+  createUserDocuments,
+  createMenuItemDocument,
+  createRestaurantCategoryDocument,
+} from './dbInterface';
 
 // users
 /*  POST
@@ -295,3 +300,23 @@ export function getFilteredRestaurants(request: Request, response: Response, nex
 
 // check to see if all elements in target exist in arr
 const checker = (arr: any, target: any) => target.every((v: any) => arr.includes(v));
+
+
+export const populateUsers = () => {
+  return createUserDocuments([
+    { userName: 'ted', password: 'letTedIn', email: 'ted@pizza.com' },
+    { userName: 'lori', password: 'letLoriIn', email: 'lori@peony.com' },
+    { userName: 'rachel', password: 'letRachelIn', email: 'rachel@babies.com' },
+  ]);
+};
+
+export const populateDb = (equest: Request, response: Response, next: any) => {
+  populateUsers()
+    .then( (docs: Document[]) => {
+      response.status(201).json({
+        users: docs,
+        success: true,
+      });
+         
+    });
+};
