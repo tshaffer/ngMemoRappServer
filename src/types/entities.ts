@@ -31,7 +31,7 @@ export interface RestaurantViewReviewEntity {
 
 export interface RestaurantEntity {
   restaurantName: string;
-  categoryName: string[];
+  categoryNames: string[];
   yelpBusinessDetails?: any;
   menuItemNames: string[];
   reviews: RestaurantReviewEntity[];

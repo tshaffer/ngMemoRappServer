@@ -6,7 +6,7 @@ const Schema = mongoose.Schema;
 const RestaurantSchema = new Schema(
   {
     restaurantName: { type: String, required: true },             // possibly duplicates yelp name
-    categoryName: [{ type: String }],                       // Restaurant category: pizza, burritos, sandwiches, etc. Should it be an array of categories?
+    categoryNames: [{ type: String }],                       // Restaurant category: pizza, burritos, sandwiches, etc. Should it be an array of categories?
     // overallRating: { type: Number },                    // in db, or calculated from reviews?
     // foodRating: { type: Number },                       // in db, or calculated from reviews?
     // serviceRating: { type: Number },                    // in db, or calculated from reviews?

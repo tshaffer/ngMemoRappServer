@@ -333,22 +333,57 @@ export const populateMenuItems = () => {
   return createMenuItemDocuments(menuItemEntities);
 };
 
+const getAllYelpData = (yelpBusinessIds: string[]): Promise<any[]> => {
+
+  const yelpBusinessDetails: any[] = [];
+
+  const processNextYelpBusiness = (index: number): Promise<number[]> => {
+    console.log('processNextActivity, index: ' + index);
+
+    if (index >= yelpBusinessIds.length) {
+      return Promise.resolve(yelpBusinessDetails);
+    }
+
+    const yelpBusinessId: string = yelpBusinessIds[index];
+
+    return fetchYelpBusinessDetails(yelpBusinessId)
+      .then((businessDetails: any) => {
+        yelpBusinessDetails.push(businessDetails);
+        return processNextYelpBusiness(index + 1);
+      });
+  };
+
+  return processNextYelpBusiness(0);
+};
+
 export const populateRestaurants = () => {
   const restaurants: RestaurantEntity[] = [
     {
       restaurantName: 'Zoccolis',
-      categoryName: ['Sandwiches'],
+      categoryNames: ['Sandwiches'],
       yelpBusinessDetails: { id: 'bD5-lIjvV6miih3O1eqW_w' },
       menuItemNames: ['Meatball Sandwich'],
       reviews: [],
       visitReviews: [],
     },
   ];
-  return fetchYelpBusinessDetails(restaurants[0].yelpBusinessDetails.id)
-    .then((yelpBusinessDetails: any) => {
-      restaurants[0].yelpBusinessDetails = yelpBusinessDetails;
-      return createRestaurantDocuments(restaurants);
-    });
+
+  const yelpBusinessIds: string[] = restaurants.map( (restaurant: any) => {
+    return restaurant.yelpBusinessDetails.id;
+  });
+
+  return getAllYelpData(yelpBusinessIds).then((yelpBusinessDetails: any[]) => {
+    for (let i = 0; i < restaurants.length; i++) {
+      restaurants[i].yelpBusinessDetails = yelpBusinessDetails[i];
+    }
+    return createRestaurantDocuments(restaurants);
+  });
+
+  // return fetchYelpBusinessDetails(restaurants[0].yelpBusinessDetails.id)
+  //   .then((yelpBusinessDetails: any) => {
+  //     restaurants[0].yelpBusinessDetails = yelpBusinessDetails;
+  //     return createRestaurantDocuments(restaurants);
+  //   });
 };
 
 export const populateDb = (request: Request, response: Response, next: any) => {
