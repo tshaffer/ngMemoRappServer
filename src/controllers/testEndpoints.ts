@@ -366,6 +366,46 @@ export const populateRestaurants = () => {
       reviews: [],
       visitReviews: [],
     },
+    {
+      restaurantName: 'Bravo Taqueria',
+      categoryNames: ['Burritos'],
+      yelpBusinessDetails: { id: 'cDtfZM6toBEpaFPGI4f6ZA' },
+      menuItemNames: [''],
+      reviews: [],
+      visitReviews: [],
+    },
+    {
+      restaurantName: 'La Costeña',
+      categoryNames: ['Burritos'],
+      yelpBusinessDetails: { id: 'Y-cwAyfIHDObQi8KCDe8Pw' },
+      menuItemNames: [''],
+      reviews: [],
+      visitReviews: [],
+    },
+    {
+      restaurantName: 'Chiquitas',
+      categoryNames: ['Burritos'],
+      yelpBusinessDetails: { id: 'SDism5DnPRDGJohjQDd-ng' },
+      menuItemNames: [''],
+      reviews: [],
+      visitReviews: [],
+    },
+    {
+      restaurantName: "Howie's Artisan Pizza",
+      categoryNames: ['Pizza'],
+      yelpBusinessDetails: { id: 'wBMzAzT3haIsaA0JoDr1-Q' },
+      menuItemNames: [''],
+      reviews: [],
+      visitReviews: [],
+    },
+    {
+      restaurantName: 'High Street Market & Deli',
+      categoryNames: ['Sandwiches'],
+      yelpBusinessDetails: { id: 'tgx533AzRRPFVdVP2el2rw' },
+      menuItemNames: [''],
+      reviews: [],
+      visitReviews: [],
+    },
   ];
 
   const yelpBusinessIds: string[] = restaurants.map( (restaurant: any) => {
@@ -378,12 +418,6 @@ export const populateRestaurants = () => {
     }
     return createRestaurantDocuments(restaurants);
   });
-
-  // return fetchYelpBusinessDetails(restaurants[0].yelpBusinessDetails.id)
-  //   .then((yelpBusinessDetails: any) => {
-  //     restaurants[0].yelpBusinessDetails = yelpBusinessDetails;
-  //     return createRestaurantDocuments(restaurants);
-  //   });
 };
 
 export const populateDb = (request: Request, response: Response, next: any) => {
