@@ -14,3 +14,26 @@ export interface MenuItemEntity {
   description?: string;
 }
 
+export interface RestaurantReviewEntity {
+  userName: string;
+  comments?: string;
+  overallRating?: number;
+  foodRating?: number;
+  serviceRating?: number;
+  menuItemRatings: [];
+}
+
+export interface RestaurantViewReviewEntity {
+  userName: string;
+  date: Date;
+  comments: string;
+}
+
+export interface RestaurantEntity {
+  restaurantName: string;
+  categoryName: string[];
+  yelpBusinessDetails?: any;
+  menuItemNames: string[];
+  reviews: RestaurantReviewEntity[];
+  visitReviews: RestaurantViewReviewEntity[];
+}

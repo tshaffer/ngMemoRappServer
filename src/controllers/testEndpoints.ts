@@ -7,7 +7,7 @@ import { Document } from 'mongoose';
 import RestaurantCategory from '../models/RestaurantCategory';
 import MenuItem from '../models/MenuItem';
 
-import { UserEntity, RestaurantCategoryEntity, MenuItemEntity } from '../types';
+import { UserEntity, RestaurantCategoryEntity, MenuItemEntity, RestaurantEntity } from '../types';
 import {
   createUserDocument,
   createUserDocuments,
@@ -15,6 +15,7 @@ import {
   createMenuItemDocuments,
   createMenuItemDocument,
   createRestaurantCategoryDocument,
+  createRestaurantDocuments,
 } from './dbInterface';
 
 // users
@@ -332,26 +333,51 @@ export const populateMenuItems = () => {
   return createMenuItemDocuments(menuItemEntities);
 };
 
-export const populateDb = (request: Request, response: Response, next: any) => {
-  populateUsers()
-    .then((userDocuments: Document[]) => {
-      return populateRestaurantCategories()
-        .then((restaurantCategoryDocuments: Document[]) => {
-          return populateMenuItems()
-            .then((menuItemDocuments: Document[]) => {
-              console.log('userDocuments');
-              console.log(userDocuments);
-              console.log('restaurantCategories');
-              console.log(restaurantCategoryDocuments);
-              console.log('menuItems');
-              console.log(menuItemDocuments);
-              response.status(201).json({
-                success: true,
-                users: userDocuments,
-                restaurantCategories: restaurantCategoryDocuments,
-                menuItems: menuItemDocuments,
-              });
-            });
-        });
+export const populateRestaurants = () => {
+  const restaurants: RestaurantEntity[] = [
+    {
+      restaurantName: 'Zoccolis',
+      categoryName: ['Sandwiches'],
+      yelpBusinessDetails: { id: 'bD5-lIjvV6miih3O1eqW_w' },
+      menuItemNames: ['Meatball Sandwich'],
+      reviews: [],
+      visitReviews: [],
+    },
+  ];
+  return fetchYelpBusinessDetails(restaurants[0].yelpBusinessDetails.id)
+    .then((yelpBusinessDetails: any) => {
+      restaurants[0].yelpBusinessDetails = yelpBusinessDetails;
+      return createRestaurantDocuments(restaurants);
     });
+};
+
+export const populateDb = (request: Request, response: Response, next: any) => {
+  populateRestaurants()
+    .then((restaurantDocuments: Document[]) => {
+      response.status(201).json({
+        success: true,
+        restaurants: restaurantDocuments,
+      });
+    })
+  // populateUsers()
+  //   .then((userDocuments: Document[]) => {
+  //     return populateRestaurantCategories()
+  //       .then((restaurantCategoryDocuments: Document[]) => {
+  //         return populateMenuItems()
+  //           .then((menuItemDocuments: Document[]) => {
+  //             console.log('userDocuments');
+  //             console.log(userDocuments);
+  //             console.log('restaurantCategories');
+  //             console.log(restaurantCategoryDocuments);
+  //             console.log('menuItems');
+  //             console.log(menuItemDocuments);
+  //             response.status(201).json({
+  //               success: true,
+  //               users: userDocuments,
+  //               restaurantCategories: restaurantCategoryDocuments,
+  //               menuItems: menuItemDocuments,
+  //             });
+  //           });
+  //       });
+  //   });
 };

@@ -3,11 +3,13 @@ import { Document } from 'mongoose';
 import {
   UserEntity,
   RestaurantCategoryEntity,
+  RestaurantEntity,
   MenuItemEntity,
 } from '../types';
 import User from '../models/User';
 import RestaurantCategory from '../models/RestaurantCategory';
 import MenuItem from '../models/MenuItem';
+import Restaurant from '../models/Restaurant';
 
 export const createUserDocuments = (userDocuments: UserEntity[]): Promise<Document[]> => {
   return new Promise((resolve: any, reject: any) => {
@@ -54,7 +56,6 @@ export const createMenuItemDocuments = (menuItems: MenuItemEntity[]): Promise<Do
   });
 };
 
-// export const createUserDocument = (userEntity: UserEntity): Promise<Document | void> => {
 export const createUserDocument = (userEntity: UserEntity): Promise<any> => {
   return User.create(userEntity)
     .then((user: Document) => {
@@ -74,4 +75,19 @@ export const createMenuItemDocument = (menuItemEntity: MenuItemEntity): Promise<
     .then((user: Document) => {
       return Promise.resolve(user);
     });
+};
+
+export const createRestaurantDocuments = (restaurants: RestaurantEntity[]): Promise<Document[]> => {
+  return new Promise((resolve: any, reject: any) => {
+    Restaurant.collection.insert(restaurants, (err, docs) => {
+      if (err) {
+        console.log(err);
+        reject(err);
+      }
+      else {
+        console.log(docs);
+        resolve(docs);
+      }
+    });
+  });
 };
