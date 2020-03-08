@@ -17,7 +17,7 @@ import {
   createRestaurantCategoryDocument,
   createRestaurantDocuments,
 } from './dbInterface';
-
+import { isNil } from 'lodash';
 // users
 /*  POST
     {{URL}}/api/v1/user
@@ -294,11 +294,34 @@ export function getRestaurantsByLatLng(request: Request, response: Response): Pr
   });
 }
 
+const getCategoryNamesQuerySubExpression = (request: Request) => {
+  if (request.body.hasOwnProperty('restaurantCategories')) {
+    const restaurantCategories: any[] = request.body.restaurantCategories;
+    if (restaurantCategories.length > 0) {
+      const categoryNames: string[] = restaurantCategories.map((restaurantCategory: any) => {
+        return restaurantCategory.categoryName;
+      });
+      return {
+        categoryNames: { $in: categoryNames },
+      };
+    }
+  }
+  return null;
+};
+
 export function getFilteredRestaurants(request: Request, response: Response, next: any) {
 
-  response.status(201).json({
-    success: true,
-  });
+  const categoryNamesQuerySubExpression = getCategoryNamesQuerySubExpression(request);
+  if (!isNil(categoryNamesQuerySubExpression)) {
+    const query = Restaurant.find(categoryNamesQuerySubExpression);
+    const promise: Promise<Document[]> = query.exec();
+    return promise.then((restaurantDocs: Document[]) => {
+      response.status(201).json({
+        success: true,
+        restaurants: restaurantDocs,
+      });
+    });
+  }
 }
 
 // check to see if all elements in target exist in arr
@@ -408,7 +431,7 @@ export const populateRestaurants = () => {
     },
   ];
 
-  const yelpBusinessIds: string[] = restaurants.map( (restaurant: any) => {
+  const yelpBusinessIds: string[] = restaurants.map((restaurant: any) => {
     return restaurant.yelpBusinessDetails.id;
   });
 
@@ -427,7 +450,7 @@ export const populateDb = (request: Request, response: Response, next: any) => {
         success: true,
         restaurants: restaurantDocuments,
       });
-    })
+    });
   // populateUsers()
   //   .then((userDocuments: Document[]) => {
   //     return populateRestaurantCategories()
