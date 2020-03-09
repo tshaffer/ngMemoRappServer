@@ -301,19 +301,66 @@ const getCategoryNamesQuerySubExpression = (request: Request) => {
       const categoryNames: string[] = restaurantCategories.map((restaurantCategory: any) => {
         return restaurantCategory.categoryName;
       });
-      return {
-        categoryNames: { $in: categoryNames },
-      };
+      const qse: any = {};
+      qse.$in = categoryNames;
+      return qse;
+      // return {
+      //   categoryNames: { $in: categoryNames },
+      // };
     }
   }
   return null;
 };
 
+const getMenuItemNamesQuerySubExpression = (request: Request) => {
+  if (request.body.hasOwnProperty('menuItems')) {
+    const menuItems: any[] = request.body.menuItems;
+    if (menuItems.length > 0) {
+      const menuItemNames: string[] = menuItems.map((menuItem: any) => {
+        return menuItem.categoryName;
+      });
+      const qse: any = {};
+      qse.$in = menuItemNames;
+      return qse;
+      // return {
+      //   menuItemNames: { $in: menuItemNames },
+      // };
+    }
+  }
+  return null;
+};
+
+function add_and(query: any, orQuery: any) {
+  query.and.push({ or: orQuery });
+}
+
 export function getFilteredRestaurants(request: Request, response: Response, next: any) {
 
   const categoryNamesQuerySubExpression = getCategoryNamesQuerySubExpression(request);
-  if (!isNil(categoryNamesQuerySubExpression)) {
-    const query = Restaurant.find(categoryNamesQuerySubExpression);
+  const menuItemNamesQuerySubExpression = getMenuItemNamesQuerySubExpression(request);
+  if (!isNil(categoryNamesQuerySubExpression) && !isNil(menuItemNamesQuerySubExpression)) {
+    // const queryExpression = 
+
+    // const builtQuery: any = { and: [] };
+    // builtQuery.and.push(categoryNamesQuerySubExpression);
+    // builtQuery.and.push(menuItemNamesQuerySubExpression);
+
+    /*
+      Object {menuItemNames: Object, categoryNames: Object}
+        categoryNames:Object {$in: Array[2]}
+        menuItemNames:Object {$in: Array[1]}
+    */
+    const rQuery = {
+      menuItemNames: { $in: ['Meatball Sandwich'] },
+      categoryNames: { $in: ['Sandwiches', 'Pizza']},
+    };
+    const xQuery = {
+      menuItemNames: menuItemNamesQuerySubExpression,
+      categoryNames: categoryNamesQuerySubExpression,
+    };
+    console.log(xQuery);
+
+    const query = Restaurant.find(rQuery);
     const promise: Promise<Document[]> = query.exec();
     return promise.then((restaurantDocs: Document[]) => {
       response.status(201).json({
@@ -321,6 +368,15 @@ export function getFilteredRestaurants(request: Request, response: Response, nex
         restaurants: restaurantDocs,
       });
     });
+
+    // const query = Restaurant.find(categoryNamesQuerySubExpression);
+    // const promise: Promise<Document[]> = query.exec();
+    // return promise.then((restaurantDocs: Document[]) => {
+    //   response.status(201).json({
+    //     success: true,
+    //     restaurants: restaurantDocs,
+    //   });
+    // });
   }
 }
 
