@@ -20,7 +20,8 @@ export interface RestaurantReviewEntity {
   overallRating?: number;
   foodRating?: number;
   serviceRating?: number;
-  menuItemRatings: [];
+  ambienceRating?: number;
+  // menuItemRatings?: [];
 }
 
 export interface RestaurantViewReviewEntity {

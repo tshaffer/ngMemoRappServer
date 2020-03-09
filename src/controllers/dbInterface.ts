@@ -5,6 +5,7 @@ import {
   RestaurantCategoryEntity,
   RestaurantEntity,
   MenuItemEntity,
+  RestaurantReviewEntity,
 } from '../types';
 import User from '../models/User';
 import RestaurantCategory from '../models/RestaurantCategory';
@@ -90,4 +91,16 @@ export const createRestaurantDocuments = (restaurants: RestaurantEntity[]): Prom
       }
     });
   });
+};
+
+export const createRestaurantReviewDocuments = (restaurantId: string, reviews: RestaurantReviewEntity[]): Promise<Document> => {
+  const query = Restaurant.findOneAndUpdate(
+    { _id: restaurantId },
+    { reviews },
+  );
+  const promise: Promise<Document> = query.exec();
+  return promise
+    .then((restaurant: Document) => {
+      return Promise.resolve(restaurant);
+    });
 };

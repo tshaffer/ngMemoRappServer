@@ -16,6 +16,7 @@ import {
   createMenuItemDocument,
   createRestaurantCategoryDocument,
   createRestaurantDocuments,
+  createRestaurantReviewDocuments,
 } from './dbInterface';
 import { isNil } from 'lodash';
 // users
@@ -345,6 +346,30 @@ export function getFilteredRestaurants(request: Request, response: Response, nex
   }
 }
 
+export function aggregationTest(request: Request, response: Response, next: any) {
+  Restaurant.aggregate([
+    { $match: { categoryNames: 'Burritos' } },
+    // { $group: { _id: '$restaurantName' } },
+    { $project: { 
+      _id: 0,
+      restaurantName: 1,
+      reviews: 1,
+     } },
+  // Restaurant.aggregate([
+  //   { $match: { restaurantName: 'Chiquitas' } },
+  //   { $project: { restaurantName: 1 } },
+  ]).exec((err, locations) => {
+    if (err) {
+      throw err;
+    }
+    console.log(locations);
+    response.status(201).json({
+      success: true,
+      restaurants: locations,
+    });
+  });
+}
+
 // check to see if all elements in target exist in arr
 const checker = (arr: any, target: any) => target.every((v: any) => arr.includes(v));
 
@@ -464,14 +489,101 @@ export const populateRestaurants = () => {
   });
 };
 
+export const populateRestaurantReviews = () => {
+  // LaCostena
+  // return createRestaurantReviewDocuments('5e65636eb6c2dee096d63ba1', [
+  //   {
+  //     userName: 'ted',
+  //     comments: 'Pollo Borracho is especially flavorful. Nice and juicy.',
+  //     overallRating: 8,
+  //     foodRating: 9,
+  //     serviceRating: 6.9,
+  //     ambienceRating: 3,    
+  //   },
+  //   {
+  //     userName: 'lori',
+  //     comments: 'Enjoy the carnitas burrito and the tacos.',
+  //     overallRating: 6,
+  //     foodRating: 7,
+  //     serviceRating: 6,
+  //     ambienceRating: 2,    
+  //   },
+  //   {
+  //     userName: 'rachel',
+  //     comments: 'Super burritos are the best. Perfect to take home to Seattle',
+  //     overallRating: 8.6,
+  //     foodRating: 8.1,
+  //     serviceRating: 6.6,
+  //     ambienceRating: 5,    
+  //   },
+  // ])
+  //   .then((laCostena: Document) => {
+  //     return Promise.resolve([laCostena]);
+  //   });
+
+    // // Chiquitas
+    // return createRestaurantReviewDocuments('5e65636eb6c2dee096d63ba2', [
+    //   {
+    //     userName: 'ted',
+    //     comments: 'Flavorful and juicy',
+    //     overallRating: 7,
+    //     foodRating: 8,
+    //     serviceRating: 7.2,
+    //     ambienceRating: 3.5,    
+    //   },
+    //   {
+    //     userName: 'lori',
+    //     comments: 'Good carnitas burrito.',
+    //     overallRating: 6.6,
+    //     foodRating: 7.7,
+    //     serviceRating: 6.9,
+    //     ambienceRating: 3,    
+    //   },
+    // ])
+    //   .then((chiquitas: Document) => {
+    //     return Promise.resolve([chiquitas]);
+    //   });
+
+    // Chiquitas
+    // bogus data - do not use.
+    return createRestaurantReviewDocuments('5e65636eb6c2dee096d63ba2', [
+      {
+        userName: 'ted',
+        comments: 'Flavorful and juicy',
+        overallRating: 7,
+        foodRating: 8,
+        serviceRating: 7.2,
+        ambienceRating: 3.5,    
+      },
+      {
+        userName: 'lori',
+        comments: 'Good carnitas burrito.',
+        overallRating: 6.6,
+        foodRating: 7.7,
+        serviceRating: 6.9,
+        ambienceRating: 3,    
+      },
+    ])
+      .then((chiquitas: Document) => {
+        return Promise.resolve([chiquitas]);
+      });
+  };
+
 export const populateDb = (request: Request, response: Response, next: any) => {
-  populateRestaurants()
+  populateRestaurantReviews()
     .then((restaurantDocuments: Document[]) => {
       response.status(201).json({
         success: true,
         restaurants: restaurantDocuments,
       });
     });
+  // populateRestaurants()
+  //   .then((restaurantDocuments: Document[]) => {
+  //     response.status(201).json({
+  //       success: true,
+  //       restaurants: restaurantDocuments,
+  //     });
+  //   });
   // populateUsers()
   //   .then((userDocuments: Document[]) => {
   //     return populateRestaurantCategories()

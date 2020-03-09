@@ -13,6 +13,7 @@ import {
   addRestaurantMenuItem,
   removeRestaurantProperty,
   populateDb,
+  aggregationTest,
 } from '../controllers/testEndpoints';
 
 // test endpoints
@@ -21,6 +22,8 @@ restaurantsRouter.post('/populateDb', populateDb);
 restaurantsRouter.get('/restaurants/:latitude/:longitude', getRestaurantByLocation);
 restaurantsRouter.get('/restaurants/', getRestaurantsByLatLng);
 restaurantsRouter.get('/restaurantsByYelpId/:yelpId', getRestaurantByYelpId);
+
+restaurantsRouter.get('/aggTest/', aggregationTest);
 
 restaurantsRouter.post('/menuItem', createMenuItem);
 restaurantsRouter.post('/restaurantCategory', createRestaurantCategory);
