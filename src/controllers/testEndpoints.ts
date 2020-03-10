@@ -19,6 +19,7 @@ import {
   createRestaurantReviewDocuments,
 } from './dbInterface';
 import { isNil } from 'lodash';
+import { truncate } from 'fs';
 // users
 /*  POST
     {{URL}}/api/v1/user
@@ -348,20 +349,27 @@ export function getFilteredRestaurants(request: Request, response: Response, nex
 
 export function aggregationTest(request: Request, response: Response, next: any) {
   Restaurant.aggregate([
-    { $match: { categoryNames: 'Burritos' } },
-    // { $group: { _id: '$restaurantName' } },
-    { $project: 
-      // { overallRatingAvg: { $avg: '$overallRatings'} },
-      { overallRatingAvg: { $avg: '$reviews.overallRating'} },
+    {
+      $match:
+      {
+        'reviews.overallRating': {
+          $exists: true,
+          $ne: null,
+        },
+        categoryNames: 'Burritos',
+      },
     },
-    // { $project: { 
-    //   _id: 0,
-    //   restaurantName: 1,
-    //   reviews: 1,
-    //  } },
-  // Restaurant.aggregate([
-  //   { $match: { restaurantName: 'Chiquitas' } },
-  //   { $project: { restaurantName: 1 } },
+    {
+      $project:
+      {
+        restaurantName: 1,
+        overallRatingAvg: { $avg: '$reviews.overallRating' },
+      },
+    },
+    {
+      $sort:
+        { overallRatingAvg: -1 },
+    },
   ]).exec((err, locations) => {
     if (err) {
       throw err;
@@ -525,53 +533,53 @@ export const populateRestaurantReviews = () => {
   //     return Promise.resolve([laCostena]);
   //   });
 
-    // // Chiquitas
-    // return createRestaurantReviewDocuments('5e65636eb6c2dee096d63ba2', [
-    //   {
-    //     userName: 'ted',
-    //     comments: 'Flavorful and juicy',
-    //     overallRating: 7,
-    //     foodRating: 8,
-    //     serviceRating: 7.2,
-    //     ambienceRating: 3.5,    
-    //   },
-    //   {
-    //     userName: 'lori',
-    //     comments: 'Good carnitas burrito.',
-    //     overallRating: 6.6,
-    //     foodRating: 7.7,
-    //     serviceRating: 6.9,
-    //     ambienceRating: 3,    
-    //   },
-    // ])
-    //   .then((chiquitas: Document) => {
-    //     return Promise.resolve([chiquitas]);
-    //   });
+  // // Chiquitas
+  // return createRestaurantReviewDocuments('5e65636eb6c2dee096d63ba2', [
+  //   {
+  //     userName: 'ted',
+  //     comments: 'Flavorful and juicy',
+  //     overallRating: 7,
+  //     foodRating: 8,
+  //     serviceRating: 7.2,
+  //     ambienceRating: 3.5,    
+  //   },
+  //   {
+  //     userName: 'lori',
+  //     comments: 'Good carnitas burrito.',
+  //     overallRating: 6.6,
+  //     foodRating: 7.7,
+  //     serviceRating: 6.9,
+  //     ambienceRating: 3,    
+  //   },
+  // ])
+  //   .then((chiquitas: Document) => {
+  //     return Promise.resolve([chiquitas]);
+  //   });
 
-    // Chiquitas
-    // bogus data - do not use.
-    return createRestaurantReviewDocuments('5e65636eb6c2dee096d63ba2', [
-      {
-        userName: 'ted',
-        comments: 'Flavorful and juicy',
-        overallRating: 7,
-        foodRating: 8,
-        serviceRating: 7.2,
-        ambienceRating: 3.5,    
-      },
-      {
-        userName: 'lori',
-        comments: 'Good carnitas burrito.',
-        overallRating: 6.6,
-        foodRating: 7.7,
-        serviceRating: 6.9,
-        ambienceRating: 3,    
-      },
-    ])
-      .then((chiquitas: Document) => {
-        return Promise.resolve([chiquitas]);
-      });
-  };
+  // Chiquitas
+  // bogus data - do not use.
+  return createRestaurantReviewDocuments('5e65636eb6c2dee096d63ba2', [
+    {
+      userName: 'ted',
+      comments: 'Flavorful and juicy',
+      overallRating: 7,
+      foodRating: 8,
+      serviceRating: 7.2,
+      ambienceRating: 3.5,
+    },
+    {
+      userName: 'lori',
+      comments: 'Good carnitas burrito.',
+      overallRating: 6.6,
+      foodRating: 7.7,
+      serviceRating: 6.9,
+      ambienceRating: 3,
+    },
+  ])
+    .then((chiquitas: Document) => {
+      return Promise.resolve([chiquitas]);
+    });
+};
 
 export const populateDb = (request: Request, response: Response, next: any) => {
   populateRestaurantReviews()
