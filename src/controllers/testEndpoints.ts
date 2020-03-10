@@ -364,6 +364,9 @@ export function aggregationTest(request: Request, response: Response, next: any)
       {
         restaurantName: 1,
         overallRatingAvg: { $avg: '$reviews.overallRating' },
+        'reviews.userName': 1,
+        'reviews.overallRating': 1,
+        'reviews.comments': 1,
       },
     },
     {
