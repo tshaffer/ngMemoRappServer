@@ -350,11 +350,15 @@ export function aggregationTest(request: Request, response: Response, next: any)
   Restaurant.aggregate([
     { $match: { categoryNames: 'Burritos' } },
     // { $group: { _id: '$restaurantName' } },
-    { $project: { 
-      _id: 0,
-      restaurantName: 1,
-      reviews: 1,
-     } },
+    { $project: 
+      // { overallRatingAvg: { $avg: '$overallRatings'} },
+      { overallRatingAvg: { $avg: '$reviews.overallRating'} },
+    },
+    // { $project: { 
+    //   _id: 0,
+    //   restaurantName: 1,
+    //   reviews: 1,
+    //  } },
   // Restaurant.aggregate([
   //   { $match: { restaurantName: 'Chiquitas' } },
   //   { $project: { restaurantName: 1 } },
