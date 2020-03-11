@@ -364,9 +364,18 @@ export function aggregationTest(request: Request, response: Response, next: any)
       {
         restaurantName: 1,
         overallRatingAvg: { $avg: '$reviews.overallRating' },
+        foodRatingAvg: { $avg: '$reviews.foodRating' },
         'reviews.userName': 1,
         'reviews.overallRating': 1,
+        'reviews.foodRating': 1,
         'reviews.comments': 1,
+      },
+    },
+    {
+      $match:
+      {
+        overallRatingAvg: { $gt: 4 },
+        foodRatingAvg: { $gt: 7.9 },
       },
     },
     {
@@ -559,28 +568,28 @@ export const populateRestaurantReviews = () => {
   //     return Promise.resolve([chiquitas]);
   //   });
 
-  // Chiquitas
+  // Bravo Taqueria
   // bogus data - do not use.
-  return createRestaurantReviewDocuments('5e65636eb6c2dee096d63ba2', [
+  return createRestaurantReviewDocuments('5e67e25f0e8d966ee2d1bb08', [
     {
       userName: 'ted',
-      comments: 'Flavorful and juicy',
-      overallRating: 7,
-      foodRating: 8,
-      serviceRating: 7.2,
-      ambienceRating: 3.5,
+      comments: 'Do not know - never been there',
+      overallRating: 4,
+      foodRating: 6,
+      serviceRating: 5,
+      ambienceRating: 4,    
     },
     {
       userName: 'lori',
-      comments: 'Good carnitas burrito.',
-      overallRating: 6.6,
-      foodRating: 7.7,
-      serviceRating: 6.9,
-      ambienceRating: 3,
+      comments: 'Good reviews on yelp.',
+      overallRating: 6,
+      foodRating: 5.7,
+      serviceRating: 5.2,
+      ambienceRating: 2,    
     },
   ])
-    .then((chiquitas: Document) => {
-      return Promise.resolve([chiquitas]);
+    .then((bravoTaqueria: Document) => {
+      return Promise.resolve([bravoTaqueria]);
     });
 };
 
