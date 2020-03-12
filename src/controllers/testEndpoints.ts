@@ -347,8 +347,76 @@ export function getFilteredRestaurants(request: Request, response: Response, nex
   }
 }
 
+function buildAggregationExpression() {
+
+  //     $match:
+  //     {
+  //       'reviews.overallRating': {
+  //         $exists: true,
+  //         $ne: null,
+  //       },
+  //       categoryNames: 'Burritos',
+  //     },
+  const matchConditions: any = {};
+  matchConditions['reviews.overallRating'] = {
+    $exists: true,
+    $ne: null,
+  };
+  matchConditions.categoryNames = 'Burritos';
+
+  //   $project:
+  //   {
+  //     restaurantName: 1,
+  //     overallRatingAvg: { $avg: '$reviews.overallRating' },
+  //     foodRatingAvg: { $avg: '$reviews.foodRating' },
+  //     'reviews.userName': 1,
+  //     'reviews.overallRating': 1,
+  //     'reviews.foodRating': 1,
+  //     'reviews.comments': 1,
+  //   },
+  const projectConditions: any = {};
+  projectConditions.restaurantName = 1;
+  projectConditions.overallRatingAvg = {
+    $avg: '$reviews.overallRating',
+  };
+  projectConditions.foodRatingAvg = {
+    $avg: '$reviews.foodRating',
+  };
+  projectConditions['reviews.userName'] = 1;
+  projectConditions['reviews.overallRating'] = 1;
+  projectConditions['reviews.foodRating'] = 1;
+  projectConditions['reviews.comments'] = 1;
+
+  //   $match:
+  //   {
+  //     overallRatingAvg: { $gt: 4 },
+  //     foodRatingAvg: { $gt: 7.9 },
+  //   },
+  const matchConditions2: any = {};
+  matchConditions2.overallRatingAvg = { $gt: 4 };
+  matchConditions2.foodRatingAvg = { $gt: 7.9 };
+
+  const aggregateQuery: any[] = [];
+  aggregateQuery.push({
+    $match: matchConditions,
+  });
+  aggregateQuery.push({
+    $project: projectConditions,
+  });
+  aggregateQuery.push({
+    $match: matchConditions2,
+  });
+
+  return aggregateQuery;
+}
+
 export function aggregationTest(request: Request, response: Response, next: any) {
-  Restaurant.aggregate([
+
+  const aggregationExpression: any = buildAggregationExpression();
+  console.log('aggregationExpression');
+  console.log(aggregationExpression);
+
+  const aggExpression: any = [
     {
       $match:
       {
@@ -378,20 +446,64 @@ export function aggregationTest(request: Request, response: Response, next: any)
         foodRatingAvg: { $gt: 7.9 },
       },
     },
-    {
-      $sort:
-        { overallRatingAvg: -1 },
-    },
-  ]).exec((err, locations) => {
-    if (err) {
-      throw err;
-    }
-    console.log(locations);
-    response.status(201).json({
-      success: true,
-      restaurants: locations,
+  ];
+  console.log('aggExpression');
+  console.log(aggExpression);
+
+  Restaurant.aggregate(aggregationExpression)
+    .exec((err, locations) => {
+      if (err) {
+        throw err;
+      }
+      response.status(201).json({
+        success: true,
+        restaurants: locations,
+      });
     });
-  });
+  // Restaurant.aggregate([
+  //   {
+  //     $match:
+  //     {
+  //       'reviews.overallRating': {
+  //         $exists: true,
+  //         $ne: null,
+  //       },
+  //       categoryNames: 'Burritos',
+  //     },
+  //   },
+  //   // {
+  //   //   $project:
+  //   //   {
+  //   //     restaurantName: 1,
+  //   //     overallRatingAvg: { $avg: '$reviews.overallRating' },
+  //   //     foodRatingAvg: { $avg: '$reviews.foodRating' },
+  //   //     'reviews.userName': 1,
+  //   //     'reviews.overallRating': 1,
+  //   //     'reviews.foodRating': 1,
+  //   //     'reviews.comments': 1,
+  //   //   },
+  //   // },
+  //   // {
+  //   //   $match:
+  //   //   {
+  //   //     overallRatingAvg: { $gt: 4 },
+  //   //     foodRatingAvg: { $gt: 7.9 },
+  //   //   },
+  //   // },
+  //   // {
+  //   //   $sort:
+  //   //     { overallRatingAvg: -1 },
+  //   // },
+  // ]).exec((err, locations) => {
+  //   if (err) {
+  //     throw err;
+  //   }
+  //   console.log(locations);
+  //   response.status(201).json({
+  //     success: true,
+  //     restaurants: locations,
+  //   });
+  // });
 }
 
 // check to see if all elements in target exist in arr
@@ -577,7 +689,7 @@ export const populateRestaurantReviews = () => {
       overallRating: 4,
       foodRating: 6,
       serviceRating: 5,
-      ambienceRating: 4,    
+      ambienceRating: 4,
     },
     {
       userName: 'lori',
@@ -585,7 +697,7 @@ export const populateRestaurantReviews = () => {
       overallRating: 6,
       foodRating: 5.7,
       serviceRating: 5.2,
-      ambienceRating: 2,    
+      ambienceRating: 2,
     },
   ])
     .then((bravoTaqueria: Document) => {
