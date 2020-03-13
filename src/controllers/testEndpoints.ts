@@ -425,48 +425,23 @@ export function aggregationTest(request: Request, response: Response, next: any)
           $ne: null,
         },
         // categoryNames: 'Burritos',
-        // $in: [ 'Burritos', '$categoryNames' ],
-      },
-    },
-    {
-      $unwind:
-      {
-        path: '$categoryNames',
+        // categoryNames: { $in: [ 'Burritos', 'Sandwiches' ] },
+        categoryNames: { $in: [ 'Sandwiches' ] },
       },
     },
     {
       $project:
       {
-        restaurant: 1,
-        // hasFavorites: { $or: [ { $eq: ['$categoryNames', 'Burritos'] }, { $eq: ['$categoryNames', 'Sandwiches'] }],
-        hasFavorites: { $or: [ { $eq: ['$categoryNames', 'Sandwiches'] }],
+        // hasBurritos: 1,
+        restaurantName: 1,
+        // overallRatingAvg: { $avg: '$reviews.overallRating' },
+        // foodRatingAvg: { $avg: '$reviews.foodRating' },
+        // 'reviews.userName': 1,
+        // 'reviews.overallRating': 1,
+        // 'reviews.foodRating': 1,
+        // 'reviews.comments': 1,
       },
     },
-    // {
-    //   $project:
-    //   {
-    //     restaurant: 1,
-    //     categoryNames: 1,
-    //     hasFavorites: 1,
-    //   },
-    // },
-  },
-    // {
-    //   $project:
-    //   {
-    //         // hasFavorites: {
-    //         //    $in: [ 'Sandwiches', '$categoryNames' ],
-    //         // },
-    //     isAnyTrue: { $anyElementTrue: [ poo: [ 'Sandwiches', '$categoryNames' ]]},
-    //     restaurantName: 1,
-    //     overallRatingAvg: { $avg: '$reviews.overallRating' },
-    //     foodRatingAvg: { $avg: '$reviews.foodRating' },
-    //     'reviews.userName': 1,
-    //     'reviews.overallRating': 1,
-    //     'reviews.foodRating': 1,
-    //     'reviews.comments': 1,
-    //   },
-    // },
     // {
     //   $match:
     //   {
