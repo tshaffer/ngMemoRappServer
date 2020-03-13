@@ -425,30 +425,28 @@ export function aggregationTest(request: Request, response: Response, next: any)
           $ne: null,
         },
         // categoryNames: 'Burritos',
-        // categoryNames: { $in: [ 'Burritos', 'Sandwiches' ] },
-        categoryNames: { $in: [ 'Sandwiches' ] },
+        categoryNames: { $in: [ 'Burritos', 'Sandwiches' ] },
       },
     },
     {
       $project:
       {
-        // hasBurritos: 1,
         restaurantName: 1,
-        // overallRatingAvg: { $avg: '$reviews.overallRating' },
-        // foodRatingAvg: { $avg: '$reviews.foodRating' },
-        // 'reviews.userName': 1,
-        // 'reviews.overallRating': 1,
-        // 'reviews.foodRating': 1,
-        // 'reviews.comments': 1,
+        overallRatingAvg: { $avg: '$reviews.overallRating' },
+        foodRatingAvg: { $avg: '$reviews.foodRating' },
+        'reviews.userName': 1,
+        'reviews.overallRating': 1,
+        'reviews.foodRating': 1,
+        'reviews.comments': 1,
       },
     },
-    // {
-    //   $match:
-    //   {
-    //     overallRatingAvg: { $gt: 1 },
-    //     foodRatingAvg: { $gt: 1 },
-    //   },
-    // },
+    {
+      $match:
+      {
+        overallRatingAvg: { $gt: 7 },
+        foodRatingAvg: { $gt: 1 },
+      },
+    },
   ];
   console.log('aggExpression');
   console.log(aggExpression);
