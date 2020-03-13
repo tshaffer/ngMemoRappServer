@@ -443,7 +443,7 @@ export function aggregationTest(request: Request, response: Response, next: any)
     {
       $match:
       {
-        overallRatingAvg: { $gt: 7 },
+        overallRatingAvg: { $gt: 6.8 },
         foodRatingAvg: { $gt: 1 },
       },
     },
@@ -683,29 +683,49 @@ export const populateRestaurantReviews = () => {
   //   });
 
   // Bravo Taqueria
-  // bogus data - do not use.
-  return createRestaurantReviewDocuments('5e67e25f0e8d966ee2d1bb08', [
-    {
-      userName: 'ted',
-      comments: 'Do not know - never been there',
-      overallRating: 4,
-      foodRating: 6,
-      serviceRating: 5,
-      ambienceRating: 4,
-    },
-    {
-      userName: 'lori',
-      comments: 'Good reviews on yelp.',
-      overallRating: 6,
-      foodRating: 5.7,
-      serviceRating: 5.2,
-      ambienceRating: 2,
-    },
-  ])
-    .then((bravoTaqueria: Document) => {
-      return Promise.resolve([bravoTaqueria]);
-    });
-};
+  // return createRestaurantReviewDocuments('5e67e25f0e8d966ee2d1bb08', [
+  //   {
+  //     userName: 'ted',
+  //     comments: 'Do not know - never been there',
+  //     overallRating: 4,
+  //     foodRating: 6,
+  //     serviceRating: 5,
+  //     ambienceRating: 4,
+  //   },
+  //   {
+  //     userName: 'lori',
+  //     comments: 'Good reviews on yelp.',
+  //     overallRating: 6,
+  //     foodRating: 5.7,
+  //     serviceRating: 5.2,
+  //     ambienceRating: 2,
+  //   },
+  // ])
+  //   .then((bravoTaqueria: Document) => {
+  //     return Promise.resolve([bravoTaqueria]);
+  //   });
+    return createRestaurantReviewDocuments('5e65636eb6c2dee096d63b9f', [
+      {
+        userName: 'ted',
+        comments: 'Great meatball sandwiches',
+        overallRating: 7,
+        foodRating: 8,
+        serviceRating: 6,
+        ambienceRating: 3,
+      },
+      {
+        userName: 'lori',
+        comments: 'Pastrami sandwich is really good.',
+        overallRating: 7,
+        foodRating: 7,
+        serviceRating: 7,
+        ambienceRating: 2,
+      },
+    ])
+      .then((zoccolis: Document) => {
+        return Promise.resolve([zoccolis]);
+      });
+  };
 
 export const populateDb = (request: Request, response: Response, next: any) => {
   populateRestaurantReviews()
