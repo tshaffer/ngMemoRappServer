@@ -424,33 +424,62 @@ export function aggregationTest(request: Request, response: Response, next: any)
           $exists: true,
           $ne: null,
         },
-        categoryNames: 'Burritos',
+        // categoryNames: 'Burritos',
+        // $in: [ 'Burritos', '$categoryNames' ],
+      },
+    },
+    {
+      $unwind:
+      {
+        path: '$categoryNames',
       },
     },
     {
       $project:
       {
-        restaurantName: 1,
-        overallRatingAvg: { $avg: '$reviews.overallRating' },
-        foodRatingAvg: { $avg: '$reviews.foodRating' },
-        'reviews.userName': 1,
-        'reviews.overallRating': 1,
-        'reviews.foodRating': 1,
-        'reviews.comments': 1,
+        restaurant: 1,
+        // hasFavorites: { $or: [ { $eq: ['$categoryNames', 'Burritos'] }, { $eq: ['$categoryNames', 'Sandwiches'] }],
+        hasFavorites: { $or: [ { $eq: ['$categoryNames', 'Sandwiches'] }],
       },
     },
-    {
-      $match:
-      {
-        overallRatingAvg: { $gt: 4 },
-        foodRatingAvg: { $gt: 7.9 },
-      },
-    },
+    // {
+    //   $project:
+    //   {
+    //     restaurant: 1,
+    //     categoryNames: 1,
+    //     hasFavorites: 1,
+    //   },
+    // },
+  },
+    // {
+    //   $project:
+    //   {
+    //         // hasFavorites: {
+    //         //    $in: [ 'Sandwiches', '$categoryNames' ],
+    //         // },
+    //     isAnyTrue: { $anyElementTrue: [ poo: [ 'Sandwiches', '$categoryNames' ]]},
+    //     restaurantName: 1,
+    //     overallRatingAvg: { $avg: '$reviews.overallRating' },
+    //     foodRatingAvg: { $avg: '$reviews.foodRating' },
+    //     'reviews.userName': 1,
+    //     'reviews.overallRating': 1,
+    //     'reviews.foodRating': 1,
+    //     'reviews.comments': 1,
+    //   },
+    // },
+    // {
+    //   $match:
+    //   {
+    //     overallRatingAvg: { $gt: 1 },
+    //     foodRatingAvg: { $gt: 1 },
+    //   },
+    // },
   ];
   console.log('aggExpression');
   console.log(aggExpression);
 
-  Restaurant.aggregate(aggregationExpression)
+  // Restaurant.aggregate(aggregationExpression)
+  Restaurant.aggregate(aggExpression)
     .exec((err, locations) => {
       if (err) {
         throw err;
