@@ -470,11 +470,11 @@ export const populateUsers = () => {
 
 export const populateRestaurantCategories = () => {
   const restaurantCategoryEntities: RestaurantCategoryEntity[] = [
-    { categoryName: 'Burritos', description: 'taqueria' },
-    { categoryName: 'Pizza', description: 'pizza and other italian favorites' },
-    { categoryName: 'Sandwiches', description: 'Place that serves sandwiches.' },
-    { categoryName: 'Coffee', description: 'Lattes, etc.' },
-    { categoryName: 'Ice Cream', description: 'cones, milk shakes, etc.' },
+    { categoryName: 'Burritos', description: 'Taquerias only' },
+    { categoryName: 'Pizza' },
+    { categoryName: 'Sandwiches' },
+    { categoryName: 'Coffee' },
+    { categoryName: 'Pasta' },
   ];
   return createRestaurantCategoryDocuments(restaurantCategoryEntities);
 };
@@ -482,7 +482,9 @@ export const populateRestaurantCategories = () => {
 export const populateMenuItems = () => {
   const menuItemEntities: MenuItemEntity[] = [
     { menuItemName: 'Meatball Sandwich' },
-    { menuItemName: 'Macaroni & Cheese' },
+    { menuItemName: 'Prosciutto and arugula pizza' },
+    { menuItemName: 'Pollo burrito' },
+    { menuItemName: 'Carnitas' },
   ];
   return createMenuItemDocuments(menuItemEntities);
 };
@@ -521,18 +523,10 @@ export const populateRestaurants = () => {
       visitReviews: [],
     },
     {
-      restaurantName: 'Bravo Taqueria',
-      categoryNames: ['Burritos'],
-      yelpBusinessDetails: { id: 'cDtfZM6toBEpaFPGI4f6ZA' },
-      menuItemNames: [''],
-      reviews: [],
-      visitReviews: [],
-    },
-    {
       restaurantName: 'La Costeña',
       categoryNames: ['Burritos'],
       yelpBusinessDetails: { id: 'Y-cwAyfIHDObQi8KCDe8Pw' },
-      menuItemNames: [''],
+      menuItemNames: ['Pollo burrito', 'Carnitas'],
       reviews: [],
       visitReviews: [],
     },
@@ -540,15 +534,15 @@ export const populateRestaurants = () => {
       restaurantName: 'Chiquitas',
       categoryNames: ['Burritos'],
       yelpBusinessDetails: { id: 'SDism5DnPRDGJohjQDd-ng' },
-      menuItemNames: [''],
+      menuItemNames: ['Pollo burrito', 'Carnitas'],
       reviews: [],
       visitReviews: [],
     },
     {
       restaurantName: "Howie's Artisan Pizza",
-      categoryNames: ['Pizza'],
+      categoryNames: ['Pizza', 'Sandwiches'],
       yelpBusinessDetails: { id: 'wBMzAzT3haIsaA0JoDr1-Q' },
-      menuItemNames: [''],
+      menuItemNames: ['Meatball Sandwich', 'Prosciutto and arugula pizza'],
       reviews: [],
       visitReviews: [],
     },
@@ -556,6 +550,118 @@ export const populateRestaurants = () => {
       restaurantName: 'High Street Market & Deli',
       categoryNames: ['Sandwiches'],
       yelpBusinessDetails: { id: 'tgx533AzRRPFVdVP2el2rw' },
+      menuItemNames: [''],
+      reviews: [],
+      visitReviews: [],
+    },
+    {
+      restaurantName: 'Pizza Chicago',
+      categoryNames: ['Pizza'],
+      yelpBusinessDetails: { id: 'C2e_QIpD0QgiHlu_2Ari0A' },
+      menuItemNames: ['Meatball Sandwich'],
+      reviews: [],
+      visitReviews: [],
+    },
+    {
+      restaurantName: 'Terún',
+      categoryNames: ['Pizza', 'Pasta'],
+      yelpBusinessDetails: { id: 'pLqiFFz1JScp8wMMyXcx-w' },
+      menuItemNames: ['Prosciutto and arugula pizza'],
+      reviews: [],
+      visitReviews: [],
+    },
+    {
+      restaurantName: 'Napoletana Pizzeria',
+      categoryNames: ['Pizza', 'Pasta'],
+      yelpBusinessDetails: { id: 'Ce5JgEwL7G3HwalAFBcZEQ' },
+      menuItemNames: ['Prosciutto and arugula pizza'],
+      reviews: [],
+      visitReviews: [],
+    },
+    {
+      restaurantName: 'Pizzeria La Bufala',
+      categoryNames: ['Pizza', 'Pasta'],
+      yelpBusinessDetails: { id: 'tXA2SpZ79lyWxuTwjZkkgg' },
+      menuItemNames: ['Prosciutto and arugula pizza'],
+      reviews: [],
+      visitReviews: [],
+    },
+    {
+      restaurantName: 'Sandwich Bug',
+      categoryNames: ['Sandwiches'],
+      yelpBusinessDetails: { id: 'tKph0F6dMc9wnxpwjK4upA' },
+      menuItemNames: [''],
+      reviews: [],
+      visitReviews: [],
+    },
+    {
+      restaurantName: 'Taqueria La Cazuela',
+      categoryNames: ['Burritos'],
+      yelpBusinessDetails: { id: 'wFEb3Yx4dlwObCeYpm3-Fw' },
+      menuItemNames: ['Pollo burrito', 'Carnitas'],
+      reviews: [],
+      visitReviews: [],
+    },
+    {
+      restaurantName: 'Los Gallos Taqueria',
+      categoryNames: ['Burritos'],
+      yelpBusinessDetails: { id: 'FI5J97RTWw9vxGtLWvpEGA' },
+      menuItemNames: ['Pollo burrito', 'Carnitas'],
+      reviews: [],
+      visitReviews: [],
+    },
+    {
+      restaurantName: 'Cafe Iveta',
+      categoryNames: ['Coffee'],
+      yelpBusinessDetails: { id: 'DT74WaOqIZkiL1otlxNhQg' },
+      menuItemNames: [''],
+      reviews: [],
+      visitReviews: [],
+    },
+    {
+      restaurantName: 'Verve Palo Alto',
+      categoryNames: ['Coffee'],
+      yelpBusinessDetails: { id: 'AzoWYX6pPjbEMajA86caqg' },
+      menuItemNames: [''],
+      reviews: [],
+      visitReviews: [],
+    },
+    {
+      restaurantName: 'Firefly',
+      categoryNames: ['Coffee'],
+      yelpBusinessDetails: { id: 'W0JveBM6AVr35_lr5-EXTg' },
+      menuItemNames: [''],
+      reviews: [],
+      visitReviews: [],
+    },
+    {
+      restaurantName: 'Saint Frank',
+      categoryNames: ['Coffee'],
+      yelpBusinessDetails: { id: 'jiVieLy9l_FtoWQASmMlag' },
+      menuItemNames: [''],
+      reviews: [],
+      visitReviews: [],
+    },
+    {
+      restaurantName: 'Bluestone Lane',
+      categoryNames: ['Coffee'],
+      yelpBusinessDetails: { id: 'yVWJXJVDIAmUspOl4t57Dg' },
+      menuItemNames: [''],
+      reviews: [],
+      visitReviews: [],
+    },
+    {
+      restaurantName: 'Zombie Runner',
+      categoryNames: ['Coffee'],
+      yelpBusinessDetails: { id: 'z4RM2qx5Gi-Igsns9e-6Hw' },
+      menuItemNames: [''],
+      reviews: [],
+      visitReviews: [],
+    },
+    {
+      restaurantName: 'Caffè Bonini',
+      categoryNames: ['Coffee'],
+      yelpBusinessDetails: { id: 'AqpZTy5jF-lncQ0048LVdA' },
       menuItemNames: [''],
       reviews: [],
       visitReviews: [],
@@ -627,45 +733,67 @@ export const populateRestaurantReviews = () => {
           ambienceRating: 3,
         },
       ])
-      .then((chiquitas: Document) => {
-        reviews.push(chiquitas);
+        .then((chiquitas: Document) => {
+          reviews.push(chiquitas);
 
-        // Zoccoli's
-        return createRestaurantReviewDocuments('5e65636eb6c2dee096d63b9f', [
-          {
-            userName: 'ted',
-            comments: 'Great meatball sandwiches',
-            overallRating: 7,
-            foodRating: 8,
-            serviceRating: 6,
-            ambienceRating: 3,
-          },
-          {
-            userName: 'lori',
-            comments: 'Pastrami sandwich is really good.',
-            overallRating: 7,
-            foodRating: 7,
-            serviceRating: 7,
-            ambienceRating: 2,
-          },
-        ])
-          .then((zoccolis: Document) => {
-            // return Promise.resolve([zoccolis]);
-            reviews.push(zoccolis);
-            return Promise.resolve(reviews);
-          });
+          // Zoccoli's
+          return createRestaurantReviewDocuments('5e65636eb6c2dee096d63b9f', [
+            {
+              userName: 'ted',
+              comments: 'Great meatball sandwiches',
+              overallRating: 7,
+              foodRating: 8,
+              serviceRating: 6,
+              ambienceRating: 3,
+            },
+            {
+              userName: 'lori',
+              comments: 'Pastrami sandwich is really good.',
+              overallRating: 7,
+              foodRating: 7,
+              serviceRating: 7,
+              ambienceRating: 2,
+            },
+          ])
+            .then((zoccolis: Document) => {
+              // return Promise.resolve([zoccolis]);
+              reviews.push(zoccolis);
+              return Promise.resolve(reviews);
+            });
         });
     });
 };
 
 export const populateDb = (request: Request, response: Response, next: any) => {
-  populateRestaurantReviews()
-    .then((restaurantDocuments: Document[]) => {
+  let users: any;
+  let restaurantCategories: any;
+  let restaurants: any;
+
+  populateUsers()
+    .then((userDocuments: Document[]) => {
+      users = userDocuments;
+      return populateRestaurantCategories();
+    }).then((restaurantCategoryDocuments: Document[]) => {
+      restaurantCategories = restaurantCategoryDocuments;
+      return populateRestaurants();
+    }).then((restaurantDocuments: Document[]) => {
+      restaurants = restaurantDocuments;
+      console.log('populateDB complete');
       response.status(201).json({
         success: true,
-        restaurants: restaurantDocuments,
+        users,
+        restaurantCategories,
+        restaurants,
       });
     });
+
+  // populateRestaurantReviews()
+  //   .then((restaurantDocuments: Document[]) => {
+  //     response.status(201).json({
+  //       success: true,
+  //       restaurants: restaurantDocuments,
+  //     });
+  //   });
   // populateRestaurants()
   //   .then((restaurantDocuments: Document[]) => {
   //     response.status(201).json({

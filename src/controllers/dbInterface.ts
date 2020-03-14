@@ -17,7 +17,12 @@ export const createUserDocuments = (userDocuments: UserEntity[]): Promise<Docume
     User.collection.insert(userDocuments, (err, docs) => {
       if (err) {
         console.log(err);
-        reject(err);
+        if (err.code === 11000) {
+          console.log('createUserDocuments: duplicate key error');
+          resolve([]);
+        } else {
+          reject(err);
+        }
       }
       else {
         console.log(docs);
