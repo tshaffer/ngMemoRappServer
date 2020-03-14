@@ -123,6 +123,19 @@ function getReviewsMatchSpec(matchSpec: any, reviewsSpec: RestaurantReviewSpec) 
   // parking
   // takeout
 
+  // didn't work
+  // if (!isNil(reviewsSpec.menuItemRatings)) {
+  //   // reviewsSpec.menuItemRatings.forEach((menuItemRating, index) => {
+  //   //   matchSpec['reviews.menuItemRatings[0]'] = ratingExists;
+  //   // });
+  //   matchSpec['reviews.menuItemRatings'] = {
+  //     $not: [ { $size: 0 } ],
+  //     // {
+  //     //   $gt: 0,
+  //     // },
+  //   };
+  // }
+
   return matchSpec;
 }
 
@@ -139,7 +152,7 @@ function getProjectSpec(filterSpec: FilterSpec): any {
   projectSpec['reviews.comments'] = 1;
 
   // TEDTODO - separate function?
-  // remaining ratings
+  // implement additional remaining rating types
   if (!isNil(filterSpec.reviews)) {
 
     const reviewsSpec = filterSpec.reviews;
@@ -147,6 +160,15 @@ function getProjectSpec(filterSpec: FilterSpec): any {
     if (!isNil(reviewsSpec.overallRating)) {
       projectSpec.overallRatingAvg = { $avg: '$reviews.overallRating' };
     }
+
+    // didn't work
+    // if (!isNil(reviewsSpec.menuItemRatings)) {
+    //   projectSpec.menuItemRatingsCount = { $size: '$reviews.menuItemRatings' };
+    //   projectSpec.menuItemRatingsExist = {
+    //     // $not: [ { $size: reviewsSpec.menuItemRatings } ],
+    //     $gt: [ { $size: '$reviews.menuItemRatings' }, 0 ],
+    //   };
+    // }
   }
 
   return projectSpec;

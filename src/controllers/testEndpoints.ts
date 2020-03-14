@@ -372,7 +372,7 @@ export function aggregationTest(request: Request, response: Response, next: any)
           $ne: null,
         },
         // categoryNames: 'Burritos',
-        categoryNames: { $in: [ 'Burritos', 'Sandwiches' ] },
+        categoryNames: { $in: ['Burritos', 'Sandwiches'] },
       },
     },
     {
@@ -575,104 +575,88 @@ export const populateRestaurants = () => {
 };
 
 export const populateRestaurantReviews = () => {
+
+  const reviews: any[] = [];
+
   // LaCostena
-  // return createRestaurantReviewDocuments('5e65636eb6c2dee096d63ba1', [
-  //   {
-  //     userName: 'ted',
-  //     comments: 'Pollo Borracho is especially flavorful. Nice and juicy.',
-  //     overallRating: 8,
-  //     foodRating: 9,
-  //     serviceRating: 6.9,
-  //     ambienceRating: 3,    
-  //   },
-  //   {
-  //     userName: 'lori',
-  //     comments: 'Enjoy the carnitas burrito and the tacos.',
-  //     overallRating: 6,
-  //     foodRating: 7,
-  //     serviceRating: 6,
-  //     ambienceRating: 2,    
-  //   },
-  //   {
-  //     userName: 'rachel',
-  //     comments: 'Super burritos are the best. Perfect to take home to Seattle',
-  //     overallRating: 8.6,
-  //     foodRating: 8.1,
-  //     serviceRating: 6.6,
-  //     ambienceRating: 5,    
-  //   },
-  // ])
-  //   .then((laCostena: Document) => {
-  //     return Promise.resolve([laCostena]);
-  //   });
+  return createRestaurantReviewDocuments('5e65636eb6c2dee096d63ba1', [
+    {
+      userName: 'ted',
+      comments: 'Pollo Borracho is especially flavorful. Nice and juicy.',
+      overallRating: 8,
+      foodRating: 9,
+      serviceRating: 6.9,
+      ambienceRating: 3,
+    },
+    {
+      userName: 'lori',
+      comments: 'Enjoy the carnitas burrito and the tacos.',
+      overallRating: 6,
+      foodRating: 7,
+      serviceRating: 6,
+      ambienceRating: 2,
+    },
+    {
+      userName: 'rachel',
+      comments: 'Super burritos are the best. Perfect to take home to Seattle',
+      overallRating: 8.6,
+      foodRating: 8.1,
+      serviceRating: 6.6,
+      ambienceRating: 5,
+    },
+  ])
+    .then((laCostena: Document) => {
+      reviews.push(laCostena);
 
-  // // Chiquitas
-  // return createRestaurantReviewDocuments('5e65636eb6c2dee096d63ba2', [
-  //   {
-  //     userName: 'ted',
-  //     comments: 'Flavorful and juicy',
-  //     overallRating: 7,
-  //     foodRating: 8,
-  //     serviceRating: 7.2,
-  //     ambienceRating: 3.5,    
-  //   },
-  //   {
-  //     userName: 'lori',
-  //     comments: 'Good carnitas burrito.',
-  //     overallRating: 6.6,
-  //     foodRating: 7.7,
-  //     serviceRating: 6.9,
-  //     ambienceRating: 3,    
-  //   },
-  // ])
-  //   .then((chiquitas: Document) => {
-  //     return Promise.resolve([chiquitas]);
-  //   });
+      // Chiquitas
+      return createRestaurantReviewDocuments('5e65636eb6c2dee096d63ba2', [
+        {
+          userName: 'ted',
+          comments: 'Flavorful and juicy',
+          overallRating: 7,
+          foodRating: 8,
+          serviceRating: 7.2,
+          ambienceRating: 3.5,
+        },
+        {
+          userName: 'lori',
+          comments: 'Good carnitas burrito.',
+          overallRating: 6.6,
+          foodRating: 7.7,
+          serviceRating: 6.9,
+          ambienceRating: 3,
+        },
+      ])
+      .then((chiquitas: Document) => {
+        reviews.push(chiquitas);
 
-  // Bravo Taqueria
-  // return createRestaurantReviewDocuments('5e67e25f0e8d966ee2d1bb08', [
-  //   {
-  //     userName: 'ted',
-  //     comments: 'Do not know - never been there',
-  //     overallRating: 4,
-  //     foodRating: 6,
-  //     serviceRating: 5,
-  //     ambienceRating: 4,
-  //   },
-  //   {
-  //     userName: 'lori',
-  //     comments: 'Good reviews on yelp.',
-  //     overallRating: 6,
-  //     foodRating: 5.7,
-  //     serviceRating: 5.2,
-  //     ambienceRating: 2,
-  //   },
-  // ])
-  //   .then((bravoTaqueria: Document) => {
-  //     return Promise.resolve([bravoTaqueria]);
-  //   });
-    return createRestaurantReviewDocuments('5e65636eb6c2dee096d63b9f', [
-      {
-        userName: 'ted',
-        comments: 'Great meatball sandwiches',
-        overallRating: 7,
-        foodRating: 8,
-        serviceRating: 6,
-        ambienceRating: 3,
-      },
-      {
-        userName: 'lori',
-        comments: 'Pastrami sandwich is really good.',
-        overallRating: 7,
-        foodRating: 7,
-        serviceRating: 7,
-        ambienceRating: 2,
-      },
-    ])
-      .then((zoccolis: Document) => {
-        return Promise.resolve([zoccolis]);
-      });
-  };
+        // Zoccoli's
+        return createRestaurantReviewDocuments('5e65636eb6c2dee096d63b9f', [
+          {
+            userName: 'ted',
+            comments: 'Great meatball sandwiches',
+            overallRating: 7,
+            foodRating: 8,
+            serviceRating: 6,
+            ambienceRating: 3,
+          },
+          {
+            userName: 'lori',
+            comments: 'Pastrami sandwich is really good.',
+            overallRating: 7,
+            foodRating: 7,
+            serviceRating: 7,
+            ambienceRating: 2,
+          },
+        ])
+          .then((zoccolis: Document) => {
+            // return Promise.resolve([zoccolis]);
+            reviews.push(zoccolis);
+            return Promise.resolve(reviews);
+          });
+        });
+    });
+};
 
 export const populateDb = (request: Request, response: Response, next: any) => {
   populateRestaurantReviews()
