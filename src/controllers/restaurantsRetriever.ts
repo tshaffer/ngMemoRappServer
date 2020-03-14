@@ -4,7 +4,7 @@ import { Document } from 'mongoose';
 
 import { isNil } from 'lodash';
 
-import { FilterSpec } from '../types';
+import { FilterSpec, RestaurantReviewSpec } from '../types';
 
 /*
 {{URL}}/api/v1/filteredRestaurants
@@ -68,16 +68,23 @@ export function getFilteredRestaurantsQuery(filterSpec: FilterSpec): any {
     $match: matchSpec,
   });
 
+  console.log(aggregateQuery);
+  debugger;
+
   return aggregateQuery;
 }
 
 function getMatchSpec(filterSpec: FilterSpec) {
 
-  const matchSpec: any = {};
+  let matchSpec: any = {};
 
   if (filterSpec.hasOwnProperty('categories')) {
     const categoriesMatchQuery = getCategoriesMatchSpec(filterSpec.categories);
     matchSpec.categoryNames = categoriesMatchQuery;    
+  }
+
+  if (filterSpec.hasOwnProperty('reviews')) {
+    matchSpec = getReviewsMatchSpec(matchSpec, filterSpec.reviews);
   }
 
   return matchSpec;
@@ -87,6 +94,30 @@ function getCategoriesMatchSpec(categoryNames: string[]): any {
   const specifiedCategories: any = {};
   specifiedCategories.$in = categoryNames;
   return specifiedCategories;
+}
+
+function getReviewsMatchSpec(matchSpec: any, reviewsSpec: RestaurantReviewSpec) {
+  const ratingExists: any = {
+    $exists: true,
+    $ne: null,
+  };
+  if (!isNil(reviewsSpec.overallRating)) {
+    matchSpec['reviews.overallRating'] = ratingExists;
+  }
+  if (!isNil(reviewsSpec.foodRating)) {
+    matchSpec['reviews.foodRating'] = ratingExists;
+  }
+  if (!isNil(reviewsSpec.serviceRating)) {
+    matchSpec['reviews.serviceRating'] = ratingExists;
+  }
+  if (!isNil(reviewsSpec.ambienceRating)) {
+    matchSpec['reviews.ambienceRating'] = ratingExists;
+  }
+  // TEDTODO
+  // parking
+  // takeout
+
+  return matchSpec;
 }
 
 export function protoGetFilteredRestaurants(request: Request, response: Response, next: any) {
