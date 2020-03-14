@@ -4,8 +4,6 @@ import User from '../models/User';
 import { fetchYelpBusinessDetails, fetchYelpBusinessByLocation } from './yelp';
 import { Document } from 'mongoose';
 // import { RestaurantType, TagValueRequest } from '../types';
-import RestaurantCategory from '../models/RestaurantCategory';
-import MenuItem from '../models/MenuItem';
 
 import { UserEntity, RestaurantCategoryEntity, MenuItemEntity, RestaurantEntity } from '../types';
 import {
@@ -294,57 +292,6 @@ export function getRestaurantsByLatLng(request: Request, response: Response): Pr
   return fetchYelpBusinessByLocation(request.query.latitude, request.query.longitude).then((responseData: any) => {
     return response.json(responseData);
   });
-}
-
-const getCategoryNamesQuerySubExpression = (request: Request) => {
-  if (request.body.hasOwnProperty('restaurantCategories')) {
-    const restaurantCategories: any[] = request.body.restaurantCategories;
-    if (restaurantCategories.length > 0) {
-      const categoryNames: string[] = restaurantCategories.map((restaurantCategory: any) => {
-        return restaurantCategory.categoryName;
-      });
-      const querySubExpression: any = {};
-      querySubExpression.$in = categoryNames;
-      return querySubExpression;
-    }
-  }
-  return null;
-};
-
-const getMenuItemNamesQuerySubExpression = (request: Request) => {
-  if (request.body.hasOwnProperty('menuItems')) {
-    const menuItems: any[] = request.body.menuItems;
-    if (menuItems.length > 0) {
-      const menuItemNames: string[] = menuItems.map((menuItem: any) => {
-        return menuItem.menuItemName;
-      });
-      const querySubExpression: any = {};
-      querySubExpression.$in = menuItemNames;
-      return querySubExpression;
-    }
-  }
-  return null;
-};
-
-export function getFilteredRestaurants(request: Request, response: Response, next: any) {
-
-  const categoryNamesQuerySubExpression = getCategoryNamesQuerySubExpression(request);
-  const menuItemNamesQuerySubExpression = getMenuItemNamesQuerySubExpression(request);
-  if (!isNil(categoryNamesQuerySubExpression) && !isNil(menuItemNamesQuerySubExpression)) {
-    const queryExpression = {
-      menuItemNames: menuItemNamesQuerySubExpression,
-      categoryNames: categoryNamesQuerySubExpression,
-    };
-
-    const query = Restaurant.find(queryExpression);
-    const promise: Promise<Document[]> = query.exec();
-    return promise.then((restaurantDocs: Document[]) => {
-      response.status(201).json({
-        success: true,
-        restaurants: restaurantDocs,
-      });
-    });
-  }
 }
 
 function buildAggregationExpression() {

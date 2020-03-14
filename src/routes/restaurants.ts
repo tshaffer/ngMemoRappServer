@@ -7,7 +7,6 @@ import {
   getRestaurantByLocation,
   getRestaurantsByLatLng,
   updateRestaurant,
-  getFilteredRestaurants,
   getRestaurantByYelpId,
   createMenuItem,
   addRestaurantMenuItem,
@@ -15,6 +14,7 @@ import {
   populateDb,
   aggregationTest,
 } from '../controllers/testEndpoints';
+import { getFilteredRestaurants } from '../controllers/restaurantsRetriever';
 
 // test endpoints
 restaurantsRouter.post('/populateDb', populateDb);
