@@ -126,16 +126,6 @@ function getReviewsMatchSpec(matchSpec: any, reviewsSpec: RestaurantReviewSpec) 
 
 function getProjectSpec(filterSpec: FilterSpec): any {
 
-/*
-        restaurantName: 1,
-        overallRatingAvg: { $avg: '$reviews.overallRating' },
-        foodRatingAvg: { $avg: '$reviews.foodRating' },
-        'reviews.userName': 1,
-        'reviews.overallRating': 1,
-        'reviews.foodRating': 1,
-        'reviews.comments': 1,
-*/
-
   const projectSpec: any = {};
 
   projectSpec.restaurantName = 1;
@@ -146,7 +136,10 @@ function getProjectSpec(filterSpec: FilterSpec): any {
   projectSpec['reviews.foodRating'] = 1;
   projectSpec['reviews.comments'] = 1;
 
+  // TEDTODO - separate function?
+  // remaining ratings
   if (!isNil(filterSpec.reviews)) {
+    
     const reviewsSpec = filterSpec.reviews;
 
     if (!isNil(reviewsSpec.overallRating)) {
