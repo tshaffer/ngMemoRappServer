@@ -769,6 +769,16 @@ export const populateRestaurantReviews = () => {
         parkingRating: 5,
         menuItemRatings: [],
       },
+      {
+        userName: 'ted',
+        comments: '',
+        overallRating: 5,
+        foodRating: 5,
+        serviceRating: 5,
+        ambienceRating: 5,
+        parkingRating: 5,
+        menuItemRatings: [],
+      },
     ]);
   }).then((docs: Document) => {
     reviews.push(docs);
@@ -777,6 +787,16 @@ export const populateRestaurantReviews = () => {
     return createRestaurantReviewDocuments('5e65636eb6c2dee096d63ba2', [
       {
         userName: 'lori',
+        comments: '',
+        overallRating: 5,
+        foodRating: 5,
+        serviceRating: 5,
+        ambienceRating: 5,
+        parkingRating: 5,
+        menuItemRatings: [],
+      },
+      {
+        userName: 'ted',
         comments: '',
         overallRating: 5,
         foodRating: 5,
@@ -801,6 +821,16 @@ export const populateRestaurantReviews = () => {
         parkingRating: 5,
         menuItemRatings: [],
       },
+      {
+        userName: 'ted',
+        comments: '',
+        overallRating: 5,
+        foodRating: 5,
+        serviceRating: 5,
+        ambienceRating: 5,
+        parkingRating: 5,
+        menuItemRatings: [],
+      },
     ]);
   }).then((docs: Document) => {
     reviews.push(docs);
@@ -809,6 +839,16 @@ export const populateRestaurantReviews = () => {
     return createRestaurantReviewDocuments('5e65636eb6c2dee096d63ba2', [
       {
         userName: 'lori',
+        comments: '',
+        overallRating: 5,
+        foodRating: 5,
+        serviceRating: 5,
+        ambienceRating: 5,
+        parkingRating: 5,
+        menuItemRatings: [],
+      },
+      {
+        userName: 'ted',
         comments: '',
         overallRating: 5,
         foodRating: 5,
@@ -833,6 +873,16 @@ export const populateRestaurantReviews = () => {
         parkingRating: 5,
         menuItemRatings: [],
       },
+      {
+        userName: 'ted',
+        comments: '',
+        overallRating: 5,
+        foodRating: 5,
+        serviceRating: 5,
+        ambienceRating: 5,
+        parkingRating: 5,
+        menuItemRatings: [],
+      },
     ]);
   }).then((docs: Document) => {
     reviews.push(docs);
@@ -841,6 +891,16 @@ export const populateRestaurantReviews = () => {
     return createRestaurantReviewDocuments('5e65636eb6c2dee096d63ba2', [
       {
         userName: 'lori',
+        comments: '',
+        overallRating: 5,
+        foodRating: 5,
+        serviceRating: 5,
+        ambienceRating: 5,
+        parkingRating: 5,
+        menuItemRatings: [],
+      },
+      {
+        userName: 'ted',
         comments: '',
         overallRating: 5,
         foodRating: 5,
@@ -865,6 +925,16 @@ export const populateRestaurantReviews = () => {
         parkingRating: 5,
         menuItemRatings: [],
       },
+      {
+        userName: 'ted',
+        comments: '',
+        overallRating: 5,
+        foodRating: 5,
+        serviceRating: 5,
+        ambienceRating: 5,
+        parkingRating: 5,
+        menuItemRatings: [],
+      },
     ]);
   }).then((docs: Document) => {
     reviews.push(docs);
@@ -873,6 +943,16 @@ export const populateRestaurantReviews = () => {
     return createRestaurantReviewDocuments('5e65636eb6c2dee096d63ba2', [
       {
         userName: 'lori',
+        comments: '',
+        overallRating: 5,
+        foodRating: 5,
+        serviceRating: 5,
+        ambienceRating: 5,
+        parkingRating: 5,
+        menuItemRatings: [],
+      },
+      {
+        userName: 'ted',
         comments: '',
         overallRating: 5,
         foodRating: 5,
@@ -897,6 +977,16 @@ export const populateRestaurantReviews = () => {
         parkingRating: 5,
         menuItemRatings: [],
       },
+      {
+        userName: 'ted',
+        comments: '',
+        overallRating: 5,
+        foodRating: 5,
+        serviceRating: 5,
+        ambienceRating: 5,
+        parkingRating: 5,
+        menuItemRatings: [],
+      },
     ]);
   }).then((docs: Document) => {
     reviews.push(docs);
@@ -905,6 +995,16 @@ export const populateRestaurantReviews = () => {
     return createRestaurantReviewDocuments('5e65636eb6c2dee096d63ba2', [
       {
         userName: 'lori',
+        comments: '',
+        overallRating: 5,
+        foodRating: 5,
+        serviceRating: 5,
+        ambienceRating: 5,
+        parkingRating: 5,
+        menuItemRatings: [],
+      },
+      {
+        userName: 'ted',
         comments: '',
         overallRating: 5,
         foodRating: 5,
@@ -929,6 +1029,16 @@ export const populateRestaurantReviews = () => {
         parkingRating: 5,
         menuItemRatings: [],
       },
+      {
+        userName: 'ted',
+        comments: '',
+        overallRating: 5,
+        foodRating: 5,
+        serviceRating: 5,
+        ambienceRating: 5,
+        parkingRating: 5,
+        menuItemRatings: [],
+      },
     ]);
   }).then((docs: Document) => {
     reviews.push(docs);
@@ -937,6 +1047,16 @@ export const populateRestaurantReviews = () => {
     return createRestaurantReviewDocuments('5e65636eb6c2dee096d63ba2', [
       {
         userName: 'lori',
+        comments: '',
+        overallRating: 5,
+        foodRating: 5,
+        serviceRating: 5,
+        ambienceRating: 5,
+        parkingRating: 5,
+        menuItemRatings: [],
+      },
+      {
+        userName: 'ted',
         comments: '',
         overallRating: 5,
         foodRating: 5,
@@ -961,12 +1081,32 @@ export const populateRestaurantReviews = () => {
         parkingRating: 5,
         menuItemRatings: [],
       },
+      {
+        userName: 'ted',
+        comments: '',
+        overallRating: 5,
+        foodRating: 5,
+        serviceRating: 5,
+        ambienceRating: 5,
+        parkingRating: 5,
+        menuItemRatings: [],
+      },
     ]);
   }).then((docs: Document) => {
     reviews.push(docs);
 
     // Saint Frank
     return createRestaurantReviewDocuments('5e65636eb6c2dee096d63ba2', [
+      {
+        userName: 'ted',
+        comments: '',
+        overallRating: 5,
+        foodRating: 5,
+        serviceRating: 5,
+        ambienceRating: 5,
+        parkingRating: 5,
+        menuItemRatings: [],
+      },
       {
         userName: 'lori',
         comments: '',
@@ -984,6 +1124,16 @@ export const populateRestaurantReviews = () => {
     // Bluestone Lane
     return createRestaurantReviewDocuments('5e65636eb6c2dee096d63ba2', [
       {
+        userName: 'ted',
+        comments: '',
+        overallRating: 5,
+        foodRating: 5,
+        serviceRating: 5,
+        ambienceRating: 5,
+        parkingRating: 5,
+        menuItemRatings: [],
+      },
+      {
         userName: 'lori',
         comments: '',
         overallRating: 5,
@@ -1000,6 +1150,16 @@ export const populateRestaurantReviews = () => {
     // Zombie Runner
     return createRestaurantReviewDocuments('5e65636eb6c2dee096d63ba2', [
       {
+        userName: 'ted',
+        comments: '',
+        overallRating: 5,
+        foodRating: 5,
+        serviceRating: 5,
+        ambienceRating: 5,
+        parkingRating: 5,
+        menuItemRatings: [],
+      },
+      {
         userName: 'lori',
         comments: '',
         overallRating: 5,
@@ -1015,6 +1175,16 @@ export const populateRestaurantReviews = () => {
 
     // Caffe Bonini
     return createRestaurantReviewDocuments('5e65636eb6c2dee096d63ba2', [
+      {
+        userName: 'ted',
+        comments: '',
+        overallRating: 5,
+        foodRating: 5,
+        serviceRating: 5,
+        ambienceRating: 5,
+        parkingRating: 5,
+        menuItemRatings: [],
+      },
       {
         userName: 'lori',
         comments: '',
