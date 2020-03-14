@@ -61,31 +61,32 @@ export function getFilteredRestaurants(request: Request, response: Response, nex
 export function getFilteredRestaurantsQuery(filterSpec: FilterSpec): any {
   debugger;
 
-  const matchConditions = getMatchSpec(filterSpec);
+  const matchSpec = getMatchSpec(filterSpec);
 
   const aggregateQuery: any[] = [];
   aggregateQuery.push({
-    $match: matchConditions,
+    $match: matchSpec,
   });
 
   return aggregateQuery;
 }
 
 function getMatchSpec(filterSpec: FilterSpec) {
+
+  const matchSpec: any = {};
+
   if (filterSpec.hasOwnProperty('categories')) {
-    const categoriesMatchQuery = getCategoriesForMatch(filterSpec.categories);
-    return categoriesMatchQuery;
+    const categoriesMatchQuery = getCategoriesMatchSpec(filterSpec.categories);
+    matchSpec.categoryNames = categoriesMatchQuery;    
   }
-  return null;
+
+  return matchSpec;
 }
 
-function getCategoriesForMatch(categoryNames: string[]): any {
+function getCategoriesMatchSpec(categoryNames: string[]): any {
   const specifiedCategories: any = {};
   specifiedCategories.$in = categoryNames;
-  const categoryNamesQuery: any = {
-    categoryNames: specifiedCategories,
-  }
-  return categoryNamesQuery;
+  return specifiedCategories;
 }
 
 export function protoGetFilteredRestaurants(request: Request, response: Response, next: any) {
