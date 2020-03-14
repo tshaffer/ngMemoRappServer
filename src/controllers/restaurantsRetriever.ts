@@ -62,10 +62,14 @@ export function getFilteredRestaurantsQuery(filterSpec: FilterSpec): any {
   debugger;
 
   const matchSpec = getMatchSpec(filterSpec);
+  const projectSpec = getProjectSpec(filterSpec);
 
   const aggregateQuery: any[] = [];
   aggregateQuery.push({
     $match: matchSpec,
+  });
+  aggregateQuery.push({
+    $project: projectSpec,
   });
 
   console.log(aggregateQuery);
@@ -74,7 +78,7 @@ export function getFilteredRestaurantsQuery(filterSpec: FilterSpec): any {
   return aggregateQuery;
 }
 
-function getMatchSpec(filterSpec: FilterSpec) {
+function getMatchSpec(filterSpec: FilterSpec): any {
 
   let matchSpec: any = {};
 
@@ -119,6 +123,41 @@ function getReviewsMatchSpec(matchSpec: any, reviewsSpec: RestaurantReviewSpec) 
 
   return matchSpec;
 }
+
+function getProjectSpec(filterSpec: FilterSpec): any {
+
+/*
+        restaurantName: 1,
+        overallRatingAvg: { $avg: '$reviews.overallRating' },
+        foodRatingAvg: { $avg: '$reviews.foodRating' },
+        'reviews.userName': 1,
+        'reviews.overallRating': 1,
+        'reviews.foodRating': 1,
+        'reviews.comments': 1,
+*/
+
+  const projectSpec: any = {};
+
+  projectSpec.restaurantName = 1;
+  projectSpec._id = 0;
+
+  projectSpec['reviews.userName'] = 1;
+  projectSpec['reviews.overallRating'] = 1;
+  projectSpec['reviews.foodRating'] = 1;
+  projectSpec['reviews.comments'] = 1;
+
+  if (!isNil(filterSpec.reviews)) {
+    const reviewsSpec = filterSpec.reviews;
+
+    if (!isNil(reviewsSpec.overallRating)) {
+      projectSpec.overallRatingAvg = { $avg: '$reviews.overallRating' };
+    }
+  }
+
+  return projectSpec;
+}
+
+
 
 export function protoGetFilteredRestaurants(request: Request, response: Response, next: any) {
 
