@@ -59,10 +59,10 @@ export function getFilteredRestaurants(request: Request, response: Response, nex
 }
 
 export function getFilteredRestaurantsQuery(filterSpec: FilterSpec): any {
-  debugger;
 
   const matchSpec = getMatchSpec(filterSpec);
   const projectSpec = getProjectSpec(filterSpec);
+  const ratingsValuesMatchSpec = getRatingsValuesMatchSpec(filterSpec);
 
   const aggregateQuery: any[] = [];
   aggregateQuery.push({
@@ -71,9 +71,11 @@ export function getFilteredRestaurantsQuery(filterSpec: FilterSpec): any {
   aggregateQuery.push({
     $project: projectSpec,
   });
+  aggregateQuery.push({
+    $match: ratingsValuesMatchSpec,
+  });
 
   console.log(aggregateQuery);
-  debugger;
 
   return aggregateQuery;
 }
@@ -139,7 +141,7 @@ function getProjectSpec(filterSpec: FilterSpec): any {
   // TEDTODO - separate function?
   // remaining ratings
   if (!isNil(filterSpec.reviews)) {
-    
+
     const reviewsSpec = filterSpec.reviews;
 
     if (!isNil(reviewsSpec.overallRating)) {
@@ -150,6 +152,27 @@ function getProjectSpec(filterSpec: FilterSpec): any {
   return projectSpec;
 }
 
+function getRatingsValuesMatchSpec(filterSpec: FilterSpec): any {
+
+  const matchSpec: any = {};
+
+  if (filterSpec.hasOwnProperty('reviews')) {
+
+    const reviewsSpec: RestaurantReviewSpec = filterSpec.reviews;
+    
+    if (!isNil(reviewsSpec.overallRating)) {
+      matchSpec.overallRatingAvg = {
+        $gt: reviewsSpec.overallRating,
+      };
+    }
+
+    // TEDTODO
+    //   separate function?
+    //   additional ratings types.
+  }
+
+  return matchSpec;
+}
 
 
 export function protoGetFilteredRestaurants(request: Request, response: Response, next: any) {
