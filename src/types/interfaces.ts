@@ -11,7 +11,6 @@ export interface RestaurantReviewSpec {
   serviceRating?: number;
   ambienceRating?: number;
   parkingRating?: number;
-  takeout?: boolean;
   menuItemRatings?: MenuItemRating[];
 }
 

@@ -21,7 +21,8 @@ export interface RestaurantReviewEntity {
   foodRating?: number;
   serviceRating?: number;
   ambienceRating?: number;
-  // menuItemRatings?: [];
+  parkingRating?: number;
+  menuItemRatings?: [];
 }
 
 export interface RestaurantViewReviewEntity {

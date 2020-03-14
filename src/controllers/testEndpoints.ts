@@ -710,58 +710,326 @@ export const populateRestaurantReviews = () => {
       serviceRating: 6.6,
       ambienceRating: 5,
     },
-  ])
-    .then((laCostena: Document) => {
-      reviews.push(laCostena);
+  ]).then((laCostena: Document) => {
+    reviews.push(laCostena);
 
-      // Chiquitas
-      return createRestaurantReviewDocuments('5e65636eb6c2dee096d63ba2', [
-        {
-          userName: 'ted',
-          comments: 'Flavorful and juicy',
-          overallRating: 7,
-          foodRating: 8,
-          serviceRating: 7.2,
-          ambienceRating: 3.5,
-        },
-        {
-          userName: 'lori',
-          comments: 'Good carnitas burrito.',
-          overallRating: 6.6,
-          foodRating: 7.7,
-          serviceRating: 6.9,
-          ambienceRating: 3,
-        },
-      ])
-        .then((chiquitas: Document) => {
-          reviews.push(chiquitas);
+    // Chiquitas
+    return createRestaurantReviewDocuments('5e65636eb6c2dee096d63ba2', [
+      {
+        userName: 'ted',
+        comments: 'Flavorful and juicy',
+        overallRating: 7,
+        foodRating: 8,
+        serviceRating: 7.2,
+        ambienceRating: 3.5,
+      },
+      {
+        userName: 'lori',
+        comments: 'Good carnitas burrito.',
+        overallRating: 6.6,
+        foodRating: 7.7,
+        serviceRating: 6.9,
+        ambienceRating: 3,
+      },
+    ]);
+  }).then((chiquitas: Document) => {
+    reviews.push(chiquitas);
 
-          // Zoccoli's
-          return createRestaurantReviewDocuments('5e65636eb6c2dee096d63b9f', [
-            {
-              userName: 'ted',
-              comments: 'Great meatball sandwiches',
-              overallRating: 7,
-              foodRating: 8,
-              serviceRating: 6,
-              ambienceRating: 3,
-            },
-            {
-              userName: 'lori',
-              comments: 'Pastrami sandwich is really good.',
-              overallRating: 7,
-              foodRating: 7,
-              serviceRating: 7,
-              ambienceRating: 2,
-            },
-          ])
-            .then((zoccolis: Document) => {
-              // return Promise.resolve([zoccolis]);
-              reviews.push(zoccolis);
-              return Promise.resolve(reviews);
-            });
-        });
-    });
+    // Zoccoli's
+    return createRestaurantReviewDocuments('5e65636eb6c2dee096d63b9f', [
+      {
+        userName: 'ted',
+        comments: 'Great meatball sandwiches',
+        overallRating: 7,
+        foodRating: 8,
+        serviceRating: 6,
+        ambienceRating: 3,
+      },
+      {
+        userName: 'lori',
+        comments: 'Pastrami sandwich is really good.',
+        overallRating: 7,
+        foodRating: 7,
+        serviceRating: 7,
+        ambienceRating: 2,
+      },
+    ]);
+  }).then((zoccolis: Document) => {
+    reviews.push(zoccolis);
+
+    // State of Mind
+    return createRestaurantReviewDocuments('5e65636eb6c2dee096d63ba2', [
+      {
+        userName: 'lori',
+        comments: '',
+        overallRating: 5,
+        foodRating: 5,
+        serviceRating: 5,
+        ambienceRating: 5,
+        parkingRating: 5,
+        menuItemRatings: [],
+      },
+    ]);
+  }).then((docs: Document) => {
+    reviews.push(docs);
+
+    // Howie's Artisan Pizza
+    return createRestaurantReviewDocuments('5e65636eb6c2dee096d63ba2', [
+      {
+        userName: 'lori',
+        comments: '',
+        overallRating: 5,
+        foodRating: 5,
+        serviceRating: 5,
+        ambienceRating: 5,
+        parkingRating: 5,
+        menuItemRatings: [],
+      },
+    ]);
+  }).then((docs: Document) => {
+    reviews.push(docs);
+
+    // High Street Market & Deli
+    return createRestaurantReviewDocuments('5e65636eb6c2dee096d63ba2', [
+      {
+        userName: 'lori',
+        comments: '',
+        overallRating: 5,
+        foodRating: 5,
+        serviceRating: 5,
+        ambienceRating: 5,
+        parkingRating: 5,
+        menuItemRatings: [],
+      },
+    ]);
+  }).then((docs: Document) => {
+    reviews.push(docs);
+
+    // Pizza Chicago
+    return createRestaurantReviewDocuments('5e65636eb6c2dee096d63ba2', [
+      {
+        userName: 'lori',
+        comments: '',
+        overallRating: 5,
+        foodRating: 5,
+        serviceRating: 5,
+        ambienceRating: 5,
+        parkingRating: 5,
+        menuItemRatings: [],
+      },
+    ]);
+  }).then((docs: Document) => {
+    reviews.push(docs);
+
+    // Terun
+    return createRestaurantReviewDocuments('5e65636eb6c2dee096d63ba2', [
+      {
+        userName: 'lori',
+        comments: '',
+        overallRating: 5,
+        foodRating: 5,
+        serviceRating: 5,
+        ambienceRating: 5,
+        parkingRating: 5,
+        menuItemRatings: [],
+      },
+    ]);
+  }).then((docs: Document) => {
+    reviews.push(docs);
+
+    // Napoletana Pizzeria
+    return createRestaurantReviewDocuments('5e65636eb6c2dee096d63ba2', [
+      {
+        userName: 'lori',
+        comments: '',
+        overallRating: 5,
+        foodRating: 5,
+        serviceRating: 5,
+        ambienceRating: 5,
+        parkingRating: 5,
+        menuItemRatings: [],
+      },
+    ]);
+  }).then((docs: Document) => {
+    reviews.push(docs);
+
+    // Pizzeria La Bufala
+    return createRestaurantReviewDocuments('5e65636eb6c2dee096d63ba2', [
+      {
+        userName: 'lori',
+        comments: '',
+        overallRating: 5,
+        foodRating: 5,
+        serviceRating: 5,
+        ambienceRating: 5,
+        parkingRating: 5,
+        menuItemRatings: [],
+      },
+    ]);
+  }).then((docs: Document) => {
+    reviews.push(docs);
+
+    // Sandwich Bug
+    return createRestaurantReviewDocuments('5e65636eb6c2dee096d63ba2', [
+      {
+        userName: 'lori',
+        comments: '',
+        overallRating: 5,
+        foodRating: 5,
+        serviceRating: 5,
+        ambienceRating: 5,
+        parkingRating: 5,
+        menuItemRatings: [],
+      },
+    ]);
+  }).then((docs: Document) => {
+    reviews.push(docs);
+
+    // Taqueria La Cazuela
+    return createRestaurantReviewDocuments('5e65636eb6c2dee096d63ba2', [
+      {
+        userName: 'lori',
+        comments: '',
+        overallRating: 5,
+        foodRating: 5,
+        serviceRating: 5,
+        ambienceRating: 5,
+        parkingRating: 5,
+        menuItemRatings: [],
+      },
+    ]);
+  }).then((docs: Document) => {
+    reviews.push(docs);
+
+    // Los Gallos Taqueria
+    return createRestaurantReviewDocuments('5e65636eb6c2dee096d63ba2', [
+      {
+        userName: 'lori',
+        comments: '',
+        overallRating: 5,
+        foodRating: 5,
+        serviceRating: 5,
+        ambienceRating: 5,
+        parkingRating: 5,
+        menuItemRatings: [],
+      },
+    ]);
+  }).then((docs: Document) => {
+    reviews.push(docs);
+
+    // Cafe Iveta
+    return createRestaurantReviewDocuments('5e65636eb6c2dee096d63ba2', [
+      {
+        userName: 'lori',
+        comments: '',
+        overallRating: 5,
+        foodRating: 5,
+        serviceRating: 5,
+        ambienceRating: 5,
+        parkingRating: 5,
+        menuItemRatings: [],
+      },
+    ]);
+  }).then((docs: Document) => {
+    reviews.push(docs);
+
+    // Verve Palo Alto
+    return createRestaurantReviewDocuments('5e65636eb6c2dee096d63ba2', [
+      {
+        userName: 'lori',
+        comments: '',
+        overallRating: 5,
+        foodRating: 5,
+        serviceRating: 5,
+        ambienceRating: 5,
+        parkingRating: 5,
+        menuItemRatings: [],
+      },
+    ]);
+  }).then((docs: Document) => {
+    reviews.push(docs);
+
+    // Firefly
+    return createRestaurantReviewDocuments('5e65636eb6c2dee096d63ba2', [
+      {
+        userName: 'lori',
+        comments: '',
+        overallRating: 5,
+        foodRating: 5,
+        serviceRating: 5,
+        ambienceRating: 5,
+        parkingRating: 5,
+        menuItemRatings: [],
+      },
+    ]);
+  }).then((docs: Document) => {
+    reviews.push(docs);
+
+    // Saint Frank
+    return createRestaurantReviewDocuments('5e65636eb6c2dee096d63ba2', [
+      {
+        userName: 'lori',
+        comments: '',
+        overallRating: 5,
+        foodRating: 5,
+        serviceRating: 5,
+        ambienceRating: 5,
+        parkingRating: 5,
+        menuItemRatings: [],
+      },
+    ]);
+  }).then((docs: Document) => {
+    reviews.push(docs);
+
+    // Bluestone Lane
+    return createRestaurantReviewDocuments('5e65636eb6c2dee096d63ba2', [
+      {
+        userName: 'lori',
+        comments: '',
+        overallRating: 5,
+        foodRating: 5,
+        serviceRating: 5,
+        ambienceRating: 5,
+        parkingRating: 5,
+        menuItemRatings: [],
+      },
+    ]);
+  }).then((docs: Document) => {
+    reviews.push(docs);
+
+    // Zombie Runner
+    return createRestaurantReviewDocuments('5e65636eb6c2dee096d63ba2', [
+      {
+        userName: 'lori',
+        comments: '',
+        overallRating: 5,
+        foodRating: 5,
+        serviceRating: 5,
+        ambienceRating: 5,
+        parkingRating: 5,
+        menuItemRatings: [],
+      },
+    ]);
+  }).then((docs: Document) => {
+    reviews.push(docs);
+
+    // Caffe Bonini
+    return createRestaurantReviewDocuments('5e65636eb6c2dee096d63ba2', [
+      {
+        userName: 'lori',
+        comments: '',
+        overallRating: 5,
+        foodRating: 5,
+        serviceRating: 5,
+        ambienceRating: 5,
+        parkingRating: 5,
+        menuItemRatings: [],
+      },
+    ]);
+  }).then((docs: Document) => {
+    reviews.push(docs);
+    return Promise.resolve(reviews);
+  });
 };
 
 export const populateDb = (request: Request, response: Response, next: any) => {
@@ -786,40 +1054,4 @@ export const populateDb = (request: Request, response: Response, next: any) => {
         restaurants,
       });
     });
-
-  // populateRestaurantReviews()
-  //   .then((restaurantDocuments: Document[]) => {
-  //     response.status(201).json({
-  //       success: true,
-  //       restaurants: restaurantDocuments,
-  //     });
-  //   });
-  // populateRestaurants()
-  //   .then((restaurantDocuments: Document[]) => {
-  //     response.status(201).json({
-  //       success: true,
-  //       restaurants: restaurantDocuments,
-  //     });
-  //   });
-  // populateUsers()
-  //   .then((userDocuments: Document[]) => {
-  //     return populateRestaurantCategories()
-  //       .then((restaurantCategoryDocuments: Document[]) => {
-  //         return populateMenuItems()
-  //           .then((menuItemDocuments: Document[]) => {
-  //             console.log('userDocuments');
-  //             console.log(userDocuments);
-  //             console.log('restaurantCategories');
-  //             console.log(restaurantCategoryDocuments);
-  //             console.log('menuItems');
-  //             console.log(menuItemDocuments);
-  //             response.status(201).json({
-  //               success: true,
-  //               users: userDocuments,
-  //               restaurantCategories: restaurantCategoryDocuments,
-  //               menuItems: menuItemDocuments,
-  //             });
-  //           });
-  //       });
-  //   });
 };
