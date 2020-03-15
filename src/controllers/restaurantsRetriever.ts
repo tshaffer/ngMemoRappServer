@@ -59,91 +59,151 @@ export function getFilteredRestaurants(request: Request, response: Response, nex
 }
 
 // example query, from Compass
-const fullQuery =
-[
-  {
-    '$match': {
-      'categoryNames': {
-        '$in': [
-          'Burritos', 'Sandwiches'
-        ]
-      }, 
-      'reviews.overallRating': {
-        '$exists': true, 
-        '$ne': null
-      }
-    }
-  }, {
-    '$project': {
-      'overallRatingAvg': {
-        '$avg': '$reviews.overallRating'
-      }, 
-      '_id': 0, 
-      'restaurantName': 1, 
-      'reviews.userName': 1, 
-      'reviews.comments': 1, 
-      'reviews.overallRating': 1
-    }
-  }, {
-    '$unwind': {
-      'path': '$reviews'
-    }
-  }, {
-    '$match': {
-      '$or': [
-        {
-          'reviews.userName': 'ted'
-        }, {
-          'reviews.userName': 'lori'
-        }
-      ], 
-      'overallRatingAvg': {
-        '$gt': 6.9
-      }
-    }
-  }, {
-    '$project': {
-      '_id': 0, 
-      'restaurantName': 1, 
-      'reviews.userName': 1, 
-      'reviews.comments': 1, 
-      'reviews.overallRating': 1
-    }
-  }
-];
+const fullQuery: any =
+  [
+    {
+      $match: {
+        categoryNames: {
+          $in: [
+            'Burritos', 'Sandwiches',
+          ],
+        },
+        'reviews.overallRating': {
+          $exists: true,
+          $ne: null,
+        },
+      },
+    }, {
+      $project: {
+        overallRatingAvg: {
+          $avg: '$reviews.overallRating',
+        },
+        _id: 0,
+        restaurantName: 1,
+        'reviews.userName': 1,
+        'reviews.comments': 1,
+        'reviews.overallRating': 1,
+      },
+    }, {
+      $unwind: {
+        path: '$reviews',
+      },
+    }, {
+      $match: {
+        $or: [
+          {
+            'reviews.userName': 'ted',
+          }, {
+            'reviews.userName': 'lori',
+          },
+        ],
+        overallRatingAvg: {
+          $gt: 6.9,
+        },
+      },
+    }, {
+      $project: {
+        _id: 0,
+        restaurantName: 1,
+        'reviews.userName': 1,
+        'reviews.comments': 1,
+        'reviews.overallRating': 1,
+      },
+    },
+  ];
 
+  const foo: any =
+  [
+    {
+      $match: {
+        categoryNames: {
+          $in: [
+            'Burritos', 'Sandwiches',
+          ],
+        }, 
+        'reviews.overallRating': {
+          $exists: true, 
+          $ne: null,
+        },
+      },
+    }, {
+      $project: {
+        overallRatingAvg: {
+          $avg: '$reviews.overallRating',
+        }, 
+        _id: 0, 
+        restaurantName: 1, 
+        'reviews.userName': 1, 
+        'reviews.comments': 1, 
+        'reviews.overallRating': 1,
+      },
+    }, {
+      $unwind: {
+        path: '$reviews',
+      },
+    }, {
+      $match: {
+        $or: [
+          {
+            'reviews.userName': 'ted',
+          }, {
+            'reviews.userName': 'lori',
+          },
+        ], 
+        overallRatingAvg: {
+          $gt: 6.9,
+        },
+      },
+    }, {
+      $project: {
+        _id: 0, 
+        restaurantName: 1, 
+        overallRatingAvg: 1, 
+        'reviews.userName': 1, 
+        'reviews.comments': 1, 
+        'reviews.overallRating': 1,
+      },
+    },
+  ];
+  
 export function getFilteredRestaurantsQuery(filterSpec: FilterSpec): any {
 
-  // debugger;
+  debugger;
 
-  const matchSpec = getMatchSpec(filterSpec);
+  const firstMatchSpec = getFirstMatchSpec(filterSpec);
+  const firstProjectSpec = getFirstProjectSpec(filterSpec);
   const unwindSpec = getUnwindSpec(filterSpec);
-  const projectSpec = getProjectSpec(filterSpec);
   const secondMatchSpec = getSecondMatchSpec(filterSpec);
+  const secondProjectSpec = getSecondProjectSpec(filterSpec);
 
   const aggregateQuery: any[] = [];
   aggregateQuery.push({
-    $match: matchSpec,
+    $match: firstMatchSpec,
+  });
+  aggregateQuery.push({
+    $project: firstProjectSpec,
   });
   if (!isNil(unwindSpec)) {
     aggregateQuery.push({
       $unwind: unwindSpec,
     });
   }
+  if (!isNil(secondMatchSpec)) {
+    aggregateQuery.push({
+      $match: secondMatchSpec,
+    });  
+  }
   aggregateQuery.push({
-    $project: projectSpec,
-  });
-  aggregateQuery.push({
-    $match: secondMatchSpec,
+    $project: secondProjectSpec,
   });
 
   console.log(aggregateQuery);
 
-  // return aggregateQuery;
-  return fullQuery;
+  return aggregateQuery;
+  // return fullQuery;
 }
 
-function getMatchSpec(filterSpec: FilterSpec): any {
+function getFirstMatchSpec(filterSpec: FilterSpec): any {
 
   let matchSpec: any = {};
 
@@ -203,16 +263,16 @@ function getReviewsMatchSpec(matchSpec: any, reviewsSpec: RestaurantReviewSpec) 
 }
 
 function getUnwindSpec(filterSpec: FilterSpec): any {
-  // if (!isNil(filterSpec.reviews) && filterSpec.reviews.userName.length > 0) {
-  //   return {
-  //     path: '$reviews',
-  //   };
-  // }
+  if (!isNil(filterSpec.reviews) && filterSpec.reviews.userNames.length > 0) {
+    return {
+      path: '$reviews',
+    };
+  }
   return null;
 }
 
 
-function getProjectSpec(filterSpec: FilterSpec): any {
+function getFirstProjectSpec(filterSpec: FilterSpec): any {
 
   const projectSpec: any = {};
 
@@ -247,31 +307,55 @@ function getProjectSpec(filterSpec: FilterSpec): any {
   return projectSpec;
 }
 
-function getSecondMatchSpec(filterSpec: FilterSpec): any {
+function getSecondProjectSpec(filterSpec: FilterSpec): any {
 
-  const matchSpec: any = {};
+  const projectSpec: any = {};
+
+  projectSpec._id = 0;
+  projectSpec.restaurantName = 1;
+  projectSpec.overallRatingAvg = 1;
+
+  projectSpec['reviews.userName'] = 1;
+  projectSpec['reviews.overallRating'] = 1;
+  projectSpec['reviews.foodRating'] = 1;
+  projectSpec['reviews.comments'] = 1;
+
+  return projectSpec;
+}
+
+function getSecondMatchSpec(filterSpec: FilterSpec): any {
 
   if (filterSpec.hasOwnProperty('reviews')) {
 
+    const matchSpec: any = {};
+
     const reviewsSpec: RestaurantReviewSpec = filterSpec.reviews;
 
-    if (!isNil(reviewsSpec.overallRating)) {
-      matchSpec.overallRatingAvg = {
-        $gt: reviewsSpec.overallRating,
-      };
+    if (reviewsSpec.userNames.length > 0) {
+      const userNames: any[] = [];
+      for (const userName of reviewsSpec.userNames) {
+        userNames.push(
+          { 'reviews.userName': userName },
+        );
+      }
+
+      matchSpec.$or = userNames;
     }
 
-    // if (reviewsSpec.userName.length > 0) {
-    //   matchSpec.$or
-    // }
+    if (!isNil(reviewsSpec.overallRating)) {
+      matchSpec.overallRatingAvg = { $gt: 6.9 };
+    }
 
-    // TEDTODO
-    //   separate function?
-    //   additional ratings types.
+    if (Object.keys(matchSpec).length > 0) {
+      return matchSpec;
+    }
   }
 
-  return matchSpec;
+  return null;
 }
+
+
+
 
 
 export function protoGetFilteredRestaurants(request: Request, response: Response, next: any) {

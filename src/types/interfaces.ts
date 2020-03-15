@@ -5,7 +5,7 @@ export interface FilterSpec {
 }
 
 export interface RestaurantReviewSpec {
-  userName: string[];
+  userNames: string[];
   overallRating?: number;
   foodRating?: number;
   serviceRating?: number;
