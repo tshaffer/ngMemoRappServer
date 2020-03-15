@@ -1,7 +1,13 @@
 export interface FilterSpec {
   categories?: string[];
+  location?: GeoLocationSpec;
   menuItems?: string[];
   reviews?: RestaurantReviewSpec;
+}
+
+export interface GeoLocationSpec {
+  coordinates: number[];
+  maxDistance: number;
 }
 
 export interface RestaurantReviewSpec {

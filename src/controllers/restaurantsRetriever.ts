@@ -4,7 +4,7 @@ import { Document } from 'mongoose';
 
 import { isNil } from 'lodash';
 
-import { FilterSpec, RestaurantReviewSpec } from '../types';
+import { FilterSpec, RestaurantReviewSpec, GeoLocationSpec } from '../types';
 
 /*
 {{URL}}/api/v1/filteredRestaurants
@@ -61,27 +61,27 @@ export function getFilteredRestaurants(request: Request, response: Response, nex
 // example queries, from Compass
 
 const geoQuery: any =
-[
-  {
-    $geoNear: {
-      near: {
-        type: 'Point', 
-        coordinates: [
-          -122.147944, 37.392333,
-        ],
-      }, 
-      distanceField: 'dist.calculated', 
-      maxDistance: 10000, 
-      includeLocs: 'dist.location', 
-      spherical: true,
+  [
+    {
+      $geoNear: {
+        near: {
+          type: 'Point',
+          coordinates: [
+            -122.147944, 37.392333,
+          ],
+        },
+        distanceField: 'dist.calculated',
+        maxDistance: 10000,
+        includeLocs: 'dist.location',
+        spherical: true,
+      },
+    }, {
+      $project: {
+        _id: 0,
+        restaurantName: 1,
+      },
     },
-  }, {
-    $project: {
-      _id: 0,
-      restaurantName: 1,
-    },
-  },
-];
+  ];
 
 const fullQuery: any =
   [
@@ -136,64 +136,11 @@ const fullQuery: any =
     },
   ];
 
-const foo: any =
-  [
-    {
-      $match: {
-        categoryNames: {
-          $in: [
-            'Burritos', 'Sandwiches',
-          ],
-        },
-        'reviews.overallRating': {
-          $exists: true,
-          $ne: null,
-        },
-      },
-    }, {
-      $project: {
-        overallRatingAvg: {
-          $avg: '$reviews.overallRating',
-        },
-        _id: 0,
-        restaurantName: 1,
-        'reviews.userName': 1,
-        'reviews.comments': 1,
-        'reviews.overallRating': 1,
-      },
-    }, {
-      $unwind: {
-        path: '$reviews',
-      },
-    }, {
-      $match: {
-        $or: [
-          {
-            'reviews.userName': 'ted',
-          }, {
-            'reviews.userName': 'lori',
-          },
-        ],
-        overallRatingAvg: {
-          $gt: 6.9,
-        },
-      },
-    }, {
-      $project: {
-        _id: 0,
-        restaurantName: 1,
-        overallRatingAvg: 1,
-        'reviews.userName': 1,
-        'reviews.comments': 1,
-        'reviews.overallRating': 1,
-      },
-    },
-  ];
-
 export function getFilteredRestaurantsQuery(filterSpec: FilterSpec): any {
 
   debugger;
 
+  const geoNearSpec = getGeoNearSpec(filterSpec);
   const firstMatchSpec = getFirstMatchSpec(filterSpec);
   const firstProjectSpec = getFirstProjectSpec(filterSpec);
   const unwindSpec = getUnwindSpec(filterSpec);
@@ -201,6 +148,11 @@ export function getFilteredRestaurantsQuery(filterSpec: FilterSpec): any {
   const secondProjectSpec = getSecondProjectSpec();
 
   const aggregateQuery: any[] = [];
+  if (!isNil(geoNearSpec)) {
+    aggregateQuery.push({
+      $geoNear: geoNearSpec,
+    });
+  }
   aggregateQuery.push({
     $match: firstMatchSpec,
   });
@@ -223,12 +175,31 @@ export function getFilteredRestaurantsQuery(filterSpec: FilterSpec): any {
 
   // console.log(aggregateQuery);
 
-  // return aggregateQuery;
+  return aggregateQuery;
   // return fullQuery;
-  return geoQuery;
+  // return geoQuery;
 }
 
 // PIPELINE SPECS
+
+function getGeoNearSpec(filterSpec: FilterSpec): any {
+
+  if (!isNil(filterSpec.location)) {
+    const geoLocationSpec: GeoLocationSpec = filterSpec.location;
+    return {
+      near: {
+        type: 'Point',
+        coordinates: geoLocationSpec.coordinates,
+      },
+      distanceField: 'dist.calculated',
+      maxDistance: geoLocationSpec.maxDistance,
+      includeLocs: 'dist.location',
+      spherical: true,
+    };
+  }
+
+  return null;
+}
 
 function getFirstMatchSpec(filterSpec: FilterSpec): any {
 
