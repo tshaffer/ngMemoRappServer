@@ -98,14 +98,20 @@ export const createRestaurantDocuments = (restaurants: RestaurantEntity[]): Prom
   });
 };
 
-export const createRestaurantReviewDocuments = (restaurantId: string, reviews: RestaurantReviewEntity[]): Promise<Document> => {
+export const createRestaurantReviewDocuments = (yelpId: string, reviews: RestaurantReviewEntity[]): Promise<Document> => {
+  
   const query = Restaurant.findOneAndUpdate(
-    { _id: restaurantId },
+    { 'yelpBusinessDetails.id': yelpId },
     { reviews },
   );
+  
   const promise: Promise<Document> = query.exec();
   return promise
     .then((restaurant: Document) => {
       return Promise.resolve(restaurant);
+    }).catch( (err: any) => {
+      console.log(err);
+      debugger;
+      return Promise.reject(err);
     });
 };

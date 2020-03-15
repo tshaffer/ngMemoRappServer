@@ -515,14 +515,6 @@ const getAllYelpData = (yelpBusinessIds: string[]): Promise<any[]> => {
 export const populateRestaurants = () => {
   const restaurants: RestaurantEntity[] = [
     {
-      restaurantName: 'Zoccolis',
-      categoryNames: ['Sandwiches'],
-      yelpBusinessDetails: { id: 'bD5-lIjvV6miih3O1eqW_w' },
-      menuItemNames: ['Meatball Sandwich'],
-      reviews: [],
-      visitReviews: [],
-    },
-    {
       restaurantName: 'La Costeña',
       categoryNames: ['Burritos'],
       yelpBusinessDetails: { id: 'Y-cwAyfIHDObQi8KCDe8Pw' },
@@ -531,10 +523,26 @@ export const populateRestaurants = () => {
       visitReviews: [],
     },
     {
+      restaurantName: 'State of Mind Public House & Pizzeria',
+      categoryNames: ['Pizza'],
+      yelpBusinessDetails: { id: 'a8gk25_MTKdtoOwBsiraDQ' },
+      menuItemNames: [],
+      reviews: [],
+      visitReviews: [],
+    },
+    {
       restaurantName: 'Chiquitas',
       categoryNames: ['Burritos'],
       yelpBusinessDetails: { id: 'SDism5DnPRDGJohjQDd-ng' },
       menuItemNames: ['Pollo burrito', 'Carnitas'],
+      reviews: [],
+      visitReviews: [],
+    },
+    {
+      restaurantName: 'Zoccolis',
+      categoryNames: ['Sandwiches'],
+      yelpBusinessDetails: { id: 'bD5-lIjvV6miih3O1eqW_w' },
+      menuItemNames: ['Meatball Sandwich'],
       reviews: [],
       visitReviews: [],
     },
@@ -692,12 +700,12 @@ export const populateRestaurantReviews = () => {
   const reviews: any[] = [];
 
   // LaCostena
-  return createRestaurantReviewDocuments('5e65636eb6c2dee096d63ba1', [
+  return createRestaurantReviewDocuments('-cwAyfIHDObQi8KCDe8Pw', [
     {
       userName: 'ted',
-      comments: 'Pollo Borracho is especially flavorful. Nice and juicy.',
+      comments: 'Pollo Borracho: flavorful juicy. Carne Asada - a little dry.',
       overallRating: 8,
-      foodRating: 9,
+      foodRating: 8,
       serviceRating: 6.9,
       ambienceRating: 3,
     },
@@ -720,13 +728,35 @@ export const populateRestaurantReviews = () => {
   ]).then((laCostena: Document) => {
     reviews.push(laCostena);
 
-    // Chiquitas
-    return createRestaurantReviewDocuments('5e65636eb6c2dee096d63ba2', [
+    // State of Mind
+    return createRestaurantReviewDocuments('a8gk25_MTKdtoOwBsiraDQ', [
       {
         userName: 'ted',
-        comments: 'Flavorful and juicy',
+        comments: 'Grandmas Pie is my favorite. Goat cheese is good as well.',
         overallRating: 7,
-        foodRating: 8,
+        foodRating: 7,
+        serviceRating: 7.2,
+        ambienceRating: 3.5,
+      },
+      {
+        userName: 'lori',
+        comments: '',
+        overallRating: 6.6,
+        foodRating: 7.7,
+        serviceRating: 6.9,
+        ambienceRating: 3,
+      },
+    ]);
+  }).then((stateOfMind: Document) => {
+    reviews.push(stateOfMind);
+
+    // Chiquitas
+    return createRestaurantReviewDocuments('SDism5DnPRDGJohjQDd-ng', [
+      {
+        userName: 'ted',
+        comments: 'Flavorful and juicy burritos. Fun little place.',
+        overallRating: 7,
+        foodRating: 7,
         serviceRating: 7.2,
         ambienceRating: 3.5,
       },
@@ -743,12 +773,12 @@ export const populateRestaurantReviews = () => {
     reviews.push(chiquitas);
 
     // Zoccoli's
-    return createRestaurantReviewDocuments('5e65636eb6c2dee096d63b9f', [
+    return createRestaurantReviewDocuments('bD5-lIjvV6miih3O1eqW_w', [
       {
         userName: 'ted',
-        comments: 'Great meatball sandwiches',
+        comments: 'Meatball sandwiches very good. Get soggy fairly quickly. Chicken pesto tasty but chicken is a little dry.',
         overallRating: 7,
-        foodRating: 8,
+        foodRating: 7.5,
         serviceRating: 6,
         ambienceRating: 3,
       },
@@ -764,39 +794,13 @@ export const populateRestaurantReviews = () => {
   }).then((zoccolis: Document) => {
     reviews.push(zoccolis);
 
-    // State of Mind
-    return createRestaurantReviewDocuments('5e65636eb6c2dee096d63ba2', [
-      {
-        userName: 'lori',
-        comments: '',
-        overallRating: 5,
-        foodRating: 5,
-        serviceRating: 5,
-        ambienceRating: 5,
-        parkingRating: 5,
-        menuItemRatings: [],
-      },
-      {
-        userName: 'ted',
-        comments: '',
-        overallRating: 5,
-        foodRating: 5,
-        serviceRating: 5,
-        ambienceRating: 5,
-        parkingRating: 5,
-        menuItemRatings: [],
-      },
-    ]);
-  }).then((docs: Document) => {
-    reviews.push(docs);
-
     // Howie's Artisan Pizza
-    return createRestaurantReviewDocuments('5e65636eb6c2dee096d63ba2', [
+    return createRestaurantReviewDocuments('wBMzAzT3haIsaA0JoDr1-Q', [
       {
         userName: 'lori',
         comments: '',
         overallRating: 5,
-        foodRating: 5,
+        foodRating: 8.5,
         serviceRating: 5,
         ambienceRating: 5,
         parkingRating: 5,
@@ -804,9 +808,9 @@ export const populateRestaurantReviews = () => {
       },
       {
         userName: 'ted',
-        comments: '',
+        comments: 'Pizza Bianco is one of my favorites. Next best - arugula/prosciutto. Pesto is good as well.',
         overallRating: 5,
-        foodRating: 5,
+        foodRating: 8.5,
         serviceRating: 5,
         ambienceRating: 5,
         parkingRating: 5,
@@ -817,7 +821,7 @@ export const populateRestaurantReviews = () => {
     reviews.push(docs);
 
     // High Street Market & Deli
-    return createRestaurantReviewDocuments('5e65636eb6c2dee096d63ba2', [
+    return createRestaurantReviewDocuments('tgx533AzRRPFVdVP2el2rw', [
       {
         userName: 'lori',
         comments: '',
@@ -830,9 +834,9 @@ export const populateRestaurantReviews = () => {
       },
       {
         userName: 'ted',
-        comments: '',
+        comments: 'Turkey and pesto, hold the lettuce',
         overallRating: 5,
-        foodRating: 5,
+        foodRating: 8.5,
         serviceRating: 5,
         ambienceRating: 5,
         parkingRating: 5,
@@ -843,7 +847,7 @@ export const populateRestaurantReviews = () => {
     reviews.push(docs);
 
     // Pizza Chicago
-    return createRestaurantReviewDocuments('5e65636eb6c2dee096d63ba2', [
+    return createRestaurantReviewDocuments('C2e_QIpD0QgiHlu_2Ari0A', [
       {
         userName: 'lori',
         comments: '',
@@ -856,9 +860,9 @@ export const populateRestaurantReviews = () => {
       },
       {
         userName: 'ted',
-        comments: '',
+        comments: 'Buttery crust. Excellent sausage. Watch out for diced tomatoes.',
         overallRating: 5,
-        foodRating: 5,
+        foodRating: 7,
         serviceRating: 5,
         ambienceRating: 5,
         parkingRating: 5,
@@ -869,7 +873,7 @@ export const populateRestaurantReviews = () => {
     reviews.push(docs);
 
     // Terun
-    return createRestaurantReviewDocuments('5e65636eb6c2dee096d63ba2', [
+    return createRestaurantReviewDocuments('pLqiFFz1JScp8wMMyXcx-w', [
       {
         userName: 'lori',
         comments: '',
@@ -882,9 +886,9 @@ export const populateRestaurantReviews = () => {
       },
       {
         userName: 'ted',
-        comments: '',
+        comments: 'Schiacciata (burrata and prosciutto). Terun pizza is 2nd favorite. Pasta with Ragu is really good.',
         overallRating: 5,
-        foodRating: 5,
+        foodRating: 8.5,
         serviceRating: 5,
         ambienceRating: 5,
         parkingRating: 5,
@@ -895,7 +899,7 @@ export const populateRestaurantReviews = () => {
     reviews.push(docs);
 
     // Napoletana Pizzeria
-    return createRestaurantReviewDocuments('5e65636eb6c2dee096d63ba2', [
+    return createRestaurantReviewDocuments('Ce5JgEwL7G3HwalAFBcZEQ', [
       {
         userName: 'lori',
         comments: '',
@@ -908,9 +912,9 @@ export const populateRestaurantReviews = () => {
       },
       {
         userName: 'ted',
-        comments: '',
+        comments: 'Carbonara really good. Flute limoncello - one of our favorite desserts.',
         overallRating: 5,
-        foodRating: 5,
+        foodRating: 8,
         serviceRating: 5,
         ambienceRating: 5,
         parkingRating: 5,
@@ -921,12 +925,12 @@ export const populateRestaurantReviews = () => {
     reviews.push(docs);
 
     // Pizzeria La Bufala
-    return createRestaurantReviewDocuments('5e65636eb6c2dee096d63ba2', [
+    return createRestaurantReviewDocuments('tXA2SpZ79lyWxuTwjZkkgg', [
       {
         userName: 'lori',
         comments: '',
         overallRating: 5,
-        foodRating: 5,
+        foodRating: 9,
         serviceRating: 5,
         ambienceRating: 5,
         parkingRating: 5,
@@ -934,7 +938,7 @@ export const populateRestaurantReviews = () => {
       },
       {
         userName: 'ted',
-        comments: '',
+        comments: 'Pesto gnocchi is their best menu item. They seem open to letting you build your own pizza even though that is not on the menu.',
         overallRating: 5,
         foodRating: 5,
         serviceRating: 5,
@@ -947,7 +951,7 @@ export const populateRestaurantReviews = () => {
     reviews.push(docs);
 
     // Sandwich Bug
-    return createRestaurantReviewDocuments('5e65636eb6c2dee096d63ba2', [
+    return createRestaurantReviewDocuments('tKph0F6dMc9wnxpwjK4upA', [
       {
         userName: 'lori',
         comments: '',
@@ -960,9 +964,9 @@ export const populateRestaurantReviews = () => {
       },
       {
         userName: 'ted',
-        comments: '',
+        comments: 'Bug bread, turkey, pepper jack, garlic & herb, and green pesto. Really good. Pretty big.',
         overallRating: 5,
-        foodRating: 5,
+        foodRating: 8,
         serviceRating: 5,
         ambienceRating: 5,
         parkingRating: 5,
@@ -973,7 +977,7 @@ export const populateRestaurantReviews = () => {
     reviews.push(docs);
 
     // Taqueria La Cazuela
-    return createRestaurantReviewDocuments('5e65636eb6c2dee096d63ba2', [
+    return createRestaurantReviewDocuments('wFEb3Yx4dlwObCeYpm3-Fw', [
       {
         userName: 'lori',
         comments: '',
@@ -986,9 +990,9 @@ export const populateRestaurantReviews = () => {
       },
       {
         userName: 'ted',
-        comments: '',
+        comments: 'Chips / salsa excellent. Burritos are good (no onions / cilanto, hot sauce) but need lots of salsa to make them juicy enough. Excellent outdoor garden seating.',
         overallRating: 5,
-        foodRating: 5,
+        foodRating: 7.5,
         serviceRating: 5,
         ambienceRating: 5,
         parkingRating: 5,
@@ -999,12 +1003,12 @@ export const populateRestaurantReviews = () => {
     reviews.push(docs);
 
     // Los Gallos Taqueria
-    return createRestaurantReviewDocuments('5e65636eb6c2dee096d63ba2', [
+    return createRestaurantReviewDocuments('FI5J97RTWw9vxGtLWvpEGA', [
       {
         userName: 'lori',
         comments: '',
         overallRating: 5,
-        foodRating: 5,
+        foodRating: 7.5,
         serviceRating: 5,
         ambienceRating: 5,
         parkingRating: 5,
@@ -1012,9 +1016,9 @@ export const populateRestaurantReviews = () => {
       },
       {
         userName: 'ted',
-        comments: '',
+        comments: 'Order regular grilled chicken burrito, no salsa, add cheese. Very good but needs lots of salsa.',
         overallRating: 5,
-        foodRating: 5,
+        foodRating: 7.5,
         serviceRating: 5,
         ambienceRating: 5,
         parkingRating: 5,
@@ -1025,7 +1029,7 @@ export const populateRestaurantReviews = () => {
     reviews.push(docs);
 
     // Cafe Iveta
-    return createRestaurantReviewDocuments('5e65636eb6c2dee096d63ba2', [
+    return createRestaurantReviewDocuments('DT74WaOqIZkiL1otlxNhQg', [
       {
         userName: 'lori',
         comments: '',
@@ -1038,9 +1042,9 @@ export const populateRestaurantReviews = () => {
       },
       {
         userName: 'ted',
-        comments: '',
+        comments: 'A little inconsistent but used to make excellent lattes with really creamy milk. Spicy egg biscuit is my favorite. We also sometimes get the scrambled egg sandwich. Try the breakfast burrito.',
         overallRating: 5,
-        foodRating: 5,
+        foodRating: 8,
         serviceRating: 5,
         ambienceRating: 5,
         parkingRating: 5,
@@ -1051,7 +1055,7 @@ export const populateRestaurantReviews = () => {
     reviews.push(docs);
 
     // Verve Palo Alto
-    return createRestaurantReviewDocuments('5e65636eb6c2dee096d63ba2', [
+    return createRestaurantReviewDocuments('AzoWYX6pPjbEMajA86caqg', [
       {
         userName: 'lori',
         comments: '',
@@ -1064,9 +1068,9 @@ export const populateRestaurantReviews = () => {
       },
       {
         userName: 'ted',
-        comments: '',
+        comments: 'Great outdoor seating.',
         overallRating: 5,
-        foodRating: 5,
+        foodRating: 7,
         serviceRating: 5,
         ambienceRating: 5,
         parkingRating: 5,
@@ -1077,7 +1081,7 @@ export const populateRestaurantReviews = () => {
     reviews.push(docs);
 
     // Firefly
-    return createRestaurantReviewDocuments('5e65636eb6c2dee096d63ba2', [
+    return createRestaurantReviewDocuments('W0JveBM6AVr35_lr5-EXTg', [
       {
         userName: 'lori',
         comments: '',
@@ -1090,9 +1094,9 @@ export const populateRestaurantReviews = () => {
       },
       {
         userName: 'ted',
-        comments: '',
+        comments: 'Latte is almost always way too hot, so it\'s good to get to go. I recall really liking the flavor of their coffee.',
         overallRating: 5,
-        foodRating: 5,
+        foodRating: 7,
         serviceRating: 5,
         ambienceRating: 5,
         parkingRating: 5,
@@ -1103,12 +1107,12 @@ export const populateRestaurantReviews = () => {
     reviews.push(docs);
 
     // Saint Frank
-    return createRestaurantReviewDocuments('5e65636eb6c2dee096d63ba2', [
+    return createRestaurantReviewDocuments('jiVieLy9l_FtoWQASmMlag', [
       {
         userName: 'ted',
-        comments: '',
+        comments: 'Seem really into the coffee making. No syrups.',
         overallRating: 5,
-        foodRating: 5,
+        foodRating: 7,
         serviceRating: 5,
         ambienceRating: 5,
         parkingRating: 5,
@@ -1129,12 +1133,12 @@ export const populateRestaurantReviews = () => {
     reviews.push(docs);
 
     // Bluestone Lane
-    return createRestaurantReviewDocuments('5e65636eb6c2dee096d63ba2', [
+    return createRestaurantReviewDocuments('yVWJXJVDIAmUspOl4t57Dg', [
       {
         userName: 'ted',
-        comments: '',
+        comments: 'Good latte. Great outdoor seating. Food was good, not great but way overpriced.',
         overallRating: 5,
-        foodRating: 5,
+        foodRating: 7,
         serviceRating: 5,
         ambienceRating: 5,
         parkingRating: 5,
@@ -1155,12 +1159,12 @@ export const populateRestaurantReviews = () => {
     reviews.push(docs);
 
     // Zombie Runner
-    return createRestaurantReviewDocuments('5e65636eb6c2dee096d63ba2', [
+    return createRestaurantReviewDocuments('z4RM2qx5Gi-Igsns9e-6Hw', [
       {
         userName: 'ted',
-        comments: '',
+        comments: 'Very good latte.',
         overallRating: 5,
-        foodRating: 5,
+        foodRating: 7,
         serviceRating: 5,
         ambienceRating: 5,
         parkingRating: 5,
@@ -1181,12 +1185,12 @@ export const populateRestaurantReviews = () => {
     reviews.push(docs);
 
     // Caffe Bonini
-    return createRestaurantReviewDocuments('5e65636eb6c2dee096d63ba2', [
+    return createRestaurantReviewDocuments('AqpZTy5jF-lncQ0048LVdA', [
       {
         userName: 'ted',
-        comments: '',
+        comments: 'Really like this place. Good latte.',
         overallRating: 5,
-        foodRating: 5,
+        foodRating: 8,
         serviceRating: 5,
         ambienceRating: 5,
         parkingRating: 5,
@@ -1213,6 +1217,7 @@ export const populateDb = (request: Request, response: Response, next: any) => {
   let users: any;
   let restaurantCategories: any;
   let restaurants: any;
+  let restaurantReviews: any;
 
   populateUsers()
     .then((userDocuments: Document[]) => {
@@ -1223,12 +1228,16 @@ export const populateDb = (request: Request, response: Response, next: any) => {
       return populateRestaurants();
     }).then((restaurantDocuments: Document[]) => {
       restaurants = restaurantDocuments;
+      return populateRestaurantReviews();
+    }).then((restaurantReviewDocuments: Document[]) => {
+      restaurantReviews = restaurantReviewDocuments;
       console.log('populateDB complete');
       response.status(201).json({
         success: true,
         users,
         restaurantCategories,
         restaurants,
+        restaurantReviews,
       });
     });
 };

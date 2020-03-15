@@ -1,6 +1,5 @@
 import { Request, Response } from 'express';
 import Restaurant from '../models/Restaurant';
-import { Document } from 'mongoose';
 
 import { isNil } from 'lodash';
 
@@ -58,8 +57,7 @@ export function getFilteredRestaurants(request: Request, response: Response, nex
 
 }
 
-// example queries, from Compass
-
+// example queries, built in and exported from Compass
 const geoQuery: any =
   [
     {
@@ -136,9 +134,13 @@ const fullQuery: any =
     },
   ];
 
-export function getFilteredRestaurantsQuery(filterSpec: FilterSpec): any {
+function addQuerySpecIfNonNull(aggregateQuery: any[], querySpec: any) {
+  if (!isNil(querySpec)) {
+    aggregateQuery.push(querySpec);
+  }
+}
 
-  debugger;
+export function getFilteredRestaurantsQuery(filterSpec: FilterSpec): any {
 
   const geoNearSpec = getGeoNearSpec(filterSpec);
   const firstMatchSpec = getFirstMatchSpec(filterSpec);
@@ -148,30 +150,12 @@ export function getFilteredRestaurantsQuery(filterSpec: FilterSpec): any {
   const secondProjectSpec = getSecondProjectSpec();
 
   const aggregateQuery: any[] = [];
-  if (!isNil(geoNearSpec)) {
-    aggregateQuery.push({
-      $geoNear: geoNearSpec,
-    });
-  }
-  aggregateQuery.push({
-    $match: firstMatchSpec,
-  });
-  aggregateQuery.push({
-    $project: firstProjectSpec,
-  });
-  if (!isNil(unwindSpec)) {
-    aggregateQuery.push({
-      $unwind: unwindSpec,
-    });
-  }
-  if (!isNil(secondMatchSpec)) {
-    aggregateQuery.push({
-      $match: secondMatchSpec,
-    });
-  }
-  aggregateQuery.push({
-    $project: secondProjectSpec,
-  });
+  addQuerySpecIfNonNull(aggregateQuery, { $geoNear: geoNearSpec });
+  addQuerySpecIfNonNull(aggregateQuery, { $match: firstMatchSpec });
+  addQuerySpecIfNonNull(aggregateQuery, { $project: firstProjectSpec });
+  addQuerySpecIfNonNull(aggregateQuery, { $unwind: unwindSpec });
+  addQuerySpecIfNonNull(aggregateQuery, { $match: secondMatchSpec });
+  addQuerySpecIfNonNull(aggregateQuery, { $project: secondMatchSpec });
 
   // console.log(aggregateQuery);
 
@@ -180,7 +164,7 @@ export function getFilteredRestaurantsQuery(filterSpec: FilterSpec): any {
   // return geoQuery;
 }
 
-// PIPELINE SPECS
+// PIPELINE SPEC BUILDERS
 
 function getGeoNearSpec(filterSpec: FilterSpec): any {
 
@@ -225,9 +209,13 @@ function getFirstProjectSpec(filterSpec: FilterSpec): any {
   projectSpec._id = 0;
 
   projectSpec['reviews.userName'] = 1;
+  projectSpec['reviews.comments'] = 1;
   projectSpec['reviews.overallRating'] = 1;
   projectSpec['reviews.foodRating'] = 1;
-  projectSpec['reviews.comments'] = 1;
+  projectSpec['reviews.serviceRating'] = 1;
+  projectSpec['reviews.ambienceRating'] = 1;
+  projectSpec['reviews.parkingRating'] = 1;
+  projectSpec['reviews.outdoorEatingRating'] = 1;
 
   // TEDTODO - separate function?
   // implement additional remaining rating types
@@ -235,9 +223,12 @@ function getFirstProjectSpec(filterSpec: FilterSpec): any {
 
     const reviewsSpec = filterSpec.reviews;
 
-    if (!isNil(reviewsSpec.overallRating)) {
-      projectSpec.overallRatingAvg = { $avg: '$reviews.overallRating' };
-    }
+    addAvgSpec(reviewsSpec, projectSpec, 'overallRating');
+    addAvgSpec(reviewsSpec, projectSpec, 'foodRating');
+    addAvgSpec(reviewsSpec, projectSpec, 'serviceRating');
+    addAvgSpec(reviewsSpec, projectSpec, 'ambienceRating');
+    addAvgSpec(reviewsSpec, projectSpec, 'parkingRating');
+    addAvgSpec(reviewsSpec, projectSpec, 'outdoorEatingRating');
 
     // didn't work
     // if (!isNil(reviewsSpec.menuItemRatings)) {
@@ -309,6 +300,11 @@ function getSecondProjectSpec(): any {
 }
 
 // pipeline spec generator helper functions
+function addAvgSpec(reviewsSpec: any, projectSpec: any, ratingType: string) {
+  if (!isNil(reviewsSpec[ratingType])) {
+    projectSpec[ratingType] = { $avg: '$reviews.' + ratingType };
+  }
+}
 
 function getCategoriesMatchSpecHelper(categoryNames: string[]): any {
   const specifiedCategories: any = {};
@@ -352,59 +348,3 @@ function getReviewsMatchSpecHelper(matchSpec: any, reviewsSpec: RestaurantReview
 
   return matchSpec;
 }
-
-
-
-
-
-export function protoGetFilteredRestaurants(request: Request, response: Response, next: any) {
-
-  const categoryNamesQuerySubExpression = getCategoryNamesQuerySubExpression(request);
-  const menuItemNamesQuerySubExpression = getMenuItemNamesQuerySubExpression(request);
-  if (!isNil(categoryNamesQuerySubExpression) && !isNil(menuItemNamesQuerySubExpression)) {
-    const queryExpression = {
-      menuItemNames: menuItemNamesQuerySubExpression,
-      categoryNames: categoryNamesQuerySubExpression,
-    };
-
-    const query = Restaurant.find(queryExpression);
-    const promise: Promise<Document[]> = query.exec();
-    return promise.then((restaurantDocs: Document[]) => {
-      response.status(201).json({
-        success: true,
-        restaurants: restaurantDocs,
-      });
-    });
-  }
-}
-
-const getCategoryNamesQuerySubExpression = (request: Request) => {
-  if (request.body.hasOwnProperty('restaurantCategories')) {
-    const restaurantCategories: any[] = request.body.restaurantCategories;
-    if (restaurantCategories.length > 0) {
-      const categoryNames: string[] = restaurantCategories.map((restaurantCategory: any) => {
-        return restaurantCategory.categoryName;
-      });
-      const querySubExpression: any = {};
-      querySubExpression.$in = categoryNames;
-      return querySubExpression;
-    }
-  }
-  return null;
-};
-
-const getMenuItemNamesQuerySubExpression = (request: Request) => {
-  if (request.body.hasOwnProperty('menuItems')) {
-    const menuItems: any[] = request.body.menuItems;
-    if (menuItems.length > 0) {
-      const menuItemNames: string[] = menuItems.map((menuItem: any) => {
-        return menuItem.menuItemName;
-      });
-      const querySubExpression: any = {};
-      querySubExpression.$in = menuItemNames;
-      return querySubExpression;
-    }
-  }
-  return null;
-};
-

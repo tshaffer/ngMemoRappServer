@@ -10,13 +10,18 @@ export interface GeoLocationSpec {
   maxDistance: number;
 }
 
-export interface RestaurantReviewSpec {
+export interface RestaurantReviewSpec extends RestaurantRatings {
   userNames: string[];
+}
+
+export interface RestaurantRatings {
+  comments?: string;
   overallRating?: number;
   foodRating?: number;
   serviceRating?: number;
   ambienceRating?: number;
   parkingRating?: number;
+  outdoorEatingRating?: number;
   menuItemRatings?: MenuItemRating[];
 }
 

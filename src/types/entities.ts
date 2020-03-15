@@ -1,3 +1,5 @@
+import { RestaurantRatings } from './interfaces';
+
 export interface UserEntity {
   userName: string;
   password: string;
@@ -14,15 +16,8 @@ export interface MenuItemEntity {
   description?: string;
 }
 
-export interface RestaurantReviewEntity {
+export interface RestaurantReviewEntity extends RestaurantRatings {
   userName: string;
-  comments?: string;
-  overallRating?: number;
-  foodRating?: number;
-  serviceRating?: number;
-  ambienceRating?: number;
-  parkingRating?: number;
-  menuItemRatings?: [];
 }
 
 export interface RestaurantViewReviewEntity {
