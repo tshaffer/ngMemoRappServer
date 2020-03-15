@@ -174,7 +174,7 @@ export function getFilteredRestaurantsQuery(filterSpec: FilterSpec): any {
   const firstProjectSpec = getFirstProjectSpec(filterSpec);
   const unwindSpec = getUnwindSpec(filterSpec);
   const secondMatchSpec = getSecondMatchSpec(filterSpec);
-  const secondProjectSpec = getSecondProjectSpec(filterSpec);
+  const secondProjectSpec = getSecondProjectSpec();
 
   const aggregateQuery: any[] = [];
   aggregateQuery.push({
@@ -203,74 +203,23 @@ export function getFilteredRestaurantsQuery(filterSpec: FilterSpec): any {
   // return fullQuery;
 }
 
+// PIPELINE SPECS
+
 function getFirstMatchSpec(filterSpec: FilterSpec): any {
 
   let matchSpec: any = {};
 
   if (filterSpec.hasOwnProperty('categories')) {
-    const categoriesMatchQuery = getCategoriesMatchSpec(filterSpec.categories);
+    const categoriesMatchQuery = getCategoriesMatchSpecHelper(filterSpec.categories);
     matchSpec.categoryNames = categoriesMatchQuery;
   }
 
   if (filterSpec.hasOwnProperty('reviews')) {
-    matchSpec = getReviewsMatchSpec(matchSpec, filterSpec.reviews);
+    matchSpec = getReviewsMatchSpecHelper(matchSpec, filterSpec.reviews);
   }
 
   return matchSpec;
 }
-
-function getCategoriesMatchSpec(categoryNames: string[]): any {
-  const specifiedCategories: any = {};
-  specifiedCategories.$in = categoryNames;
-  return specifiedCategories;
-}
-
-function getReviewsMatchSpec(matchSpec: any, reviewsSpec: RestaurantReviewSpec) {
-  const ratingExists: any = {
-    $exists: true,
-    $ne: null,
-  };
-  if (!isNil(reviewsSpec.overallRating)) {
-    matchSpec['reviews.overallRating'] = ratingExists;
-  }
-  if (!isNil(reviewsSpec.foodRating)) {
-    matchSpec['reviews.foodRating'] = ratingExists;
-  }
-  if (!isNil(reviewsSpec.serviceRating)) {
-    matchSpec['reviews.serviceRating'] = ratingExists;
-  }
-  if (!isNil(reviewsSpec.ambienceRating)) {
-    matchSpec['reviews.ambienceRating'] = ratingExists;
-  }
-  // TEDTODO
-  // parking
-  // takeout
-
-  // didn't work
-  // if (!isNil(reviewsSpec.menuItemRatings)) {
-  //   // reviewsSpec.menuItemRatings.forEach((menuItemRating, index) => {
-  //   //   matchSpec['reviews.menuItemRatings[0]'] = ratingExists;
-  //   // });
-  //   matchSpec['reviews.menuItemRatings'] = {
-  //     $not: [ { $size: 0 } ],
-  //     // {
-  //     //   $gt: 0,
-  //     // },
-  //   };
-  // }
-
-  return matchSpec;
-}
-
-function getUnwindSpec(filterSpec: FilterSpec): any {
-  if (!isNil(filterSpec.reviews) && filterSpec.reviews.userNames.length > 0) {
-    return {
-      path: '$reviews',
-    };
-  }
-  return null;
-}
-
 
 function getFirstProjectSpec(filterSpec: FilterSpec): any {
 
@@ -307,20 +256,13 @@ function getFirstProjectSpec(filterSpec: FilterSpec): any {
   return projectSpec;
 }
 
-function getSecondProjectSpec(filterSpec: FilterSpec): any {
-
-  const projectSpec: any = {};
-
-  projectSpec._id = 0;
-  projectSpec.restaurantName = 1;
-  projectSpec.overallRatingAvg = 1;
-
-  projectSpec['reviews.userName'] = 1;
-  projectSpec['reviews.overallRating'] = 1;
-  projectSpec['reviews.foodRating'] = 1;
-  projectSpec['reviews.comments'] = 1;
-
-  return projectSpec;
+function getUnwindSpec(filterSpec: FilterSpec): any {
+  if (!isNil(filterSpec.reviews) && filterSpec.reviews.userNames.length > 0) {
+    return {
+      path: '$reviews',
+    };
+  }
+  return null;
 }
 
 function getSecondMatchSpec(filterSpec: FilterSpec): any {
@@ -343,7 +285,7 @@ function getSecondMatchSpec(filterSpec: FilterSpec): any {
     }
 
     if (!isNil(reviewsSpec.overallRating)) {
-      matchSpec.overallRatingAvg = { $gt: 6.9 };
+      matchSpec.overallRatingAvg = { $gt: reviewsSpec.overallRating };
     }
 
     if (Object.keys(matchSpec).length > 0) {
@@ -352,6 +294,67 @@ function getSecondMatchSpec(filterSpec: FilterSpec): any {
   }
 
   return null;
+}
+
+function getSecondProjectSpec(): any {
+
+  const projectSpec: any = {};
+
+  projectSpec._id = 0;
+  projectSpec.restaurantName = 1;
+  projectSpec.overallRatingAvg = 1;
+
+  projectSpec['reviews.userName'] = 1;
+  projectSpec['reviews.overallRating'] = 1;
+  projectSpec['reviews.foodRating'] = 1;
+  projectSpec['reviews.comments'] = 1;
+
+  return projectSpec;
+}
+
+// pipeline spec generator helper functions
+
+function getCategoriesMatchSpecHelper(categoryNames: string[]): any {
+  const specifiedCategories: any = {};
+  specifiedCategories.$in = categoryNames;
+  return specifiedCategories;
+}
+
+function getReviewsMatchSpecHelper(matchSpec: any, reviewsSpec: RestaurantReviewSpec) {
+  const ratingExists: any = {
+    $exists: true,
+    $ne: null,
+  };
+  if (!isNil(reviewsSpec.overallRating)) {
+    matchSpec['reviews.overallRating'] = ratingExists;
+  }
+  if (!isNil(reviewsSpec.foodRating)) {
+    matchSpec['reviews.foodRating'] = ratingExists;
+  }
+  if (!isNil(reviewsSpec.serviceRating)) {
+    matchSpec['reviews.serviceRating'] = ratingExists;
+  }
+  if (!isNil(reviewsSpec.ambienceRating)) {
+    matchSpec['reviews.ambienceRating'] = ratingExists;
+  }
+  // TEDTODO
+  // parking
+  // takeout
+
+  // didn't work
+  // if (!isNil(reviewsSpec.menuItemRatings)) {
+  //   // reviewsSpec.menuItemRatings.forEach((menuItemRating, index) => {
+  //   //   matchSpec['reviews.menuItemRatings[0]'] = ratingExists;
+  //   // });
+  //   matchSpec['reviews.menuItemRatings'] = {
+  //     $not: [ { $size: 0 } ],
+  //     // {
+  //     //   $gt: 0,
+  //     // },
+  //   };
+  // }
+
+  return matchSpec;
 }
 
 
