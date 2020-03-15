@@ -33,9 +33,15 @@ export interface RestaurantViewReviewEntity {
 
 export interface RestaurantEntity {
   restaurantName: string;
+  location?: GeoLocation;
   categoryNames: string[];
   yelpBusinessDetails?: any;
   menuItemNames: string[];
   reviews: RestaurantReviewEntity[];
   visitReviews: RestaurantViewReviewEntity[];
+}
+
+export interface GeoLocation {
+  type: string;
+  coordinates: number[];
 }

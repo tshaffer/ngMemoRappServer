@@ -675,6 +675,13 @@ export const populateRestaurants = () => {
   return getAllYelpData(yelpBusinessIds).then((yelpBusinessDetails: any[]) => {
     for (let i = 0; i < restaurants.length; i++) {
       restaurants[i].yelpBusinessDetails = yelpBusinessDetails[i];
+      restaurants[i].location = {
+        type: 'Point',
+        coordinates: [
+          yelpBusinessDetails[i].coordinates.longitude,
+          yelpBusinessDetails[i].coordinates.latitude,
+        ],
+      };
     }
     return createRestaurantDocuments(restaurants);
   });

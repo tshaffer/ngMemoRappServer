@@ -58,7 +58,31 @@ export function getFilteredRestaurants(request: Request, response: Response, nex
 
 }
 
-// example query, from Compass
+// example queries, from Compass
+
+const geoQuery: any =
+[
+  {
+    $geoNear: {
+      near: {
+        type: 'Point', 
+        coordinates: [
+          -122.147944, 37.392333,
+        ],
+      }, 
+      distanceField: 'dist.calculated', 
+      maxDistance: 10000, 
+      includeLocs: 'dist.location', 
+      spherical: true,
+    },
+  }, {
+    $project: {
+      _id: 0,
+      restaurantName: 1,
+    },
+  },
+];
+
 const fullQuery: any =
   [
     {
@@ -112,7 +136,7 @@ const fullQuery: any =
     },
   ];
 
-  const foo: any =
+const foo: any =
   [
     {
       $match: {
@@ -120,9 +144,9 @@ const fullQuery: any =
           $in: [
             'Burritos', 'Sandwiches',
           ],
-        }, 
+        },
         'reviews.overallRating': {
-          $exists: true, 
+          $exists: true,
           $ne: null,
         },
       },
@@ -130,11 +154,11 @@ const fullQuery: any =
       $project: {
         overallRatingAvg: {
           $avg: '$reviews.overallRating',
-        }, 
-        _id: 0, 
-        restaurantName: 1, 
-        'reviews.userName': 1, 
-        'reviews.comments': 1, 
+        },
+        _id: 0,
+        restaurantName: 1,
+        'reviews.userName': 1,
+        'reviews.comments': 1,
         'reviews.overallRating': 1,
       },
     }, {
@@ -149,23 +173,23 @@ const fullQuery: any =
           }, {
             'reviews.userName': 'lori',
           },
-        ], 
+        ],
         overallRatingAvg: {
           $gt: 6.9,
         },
       },
     }, {
       $project: {
-        _id: 0, 
-        restaurantName: 1, 
-        overallRatingAvg: 1, 
-        'reviews.userName': 1, 
-        'reviews.comments': 1, 
+        _id: 0,
+        restaurantName: 1,
+        overallRatingAvg: 1,
+        'reviews.userName': 1,
+        'reviews.comments': 1,
         'reviews.overallRating': 1,
       },
     },
   ];
-  
+
 export function getFilteredRestaurantsQuery(filterSpec: FilterSpec): any {
 
   debugger;
@@ -191,16 +215,17 @@ export function getFilteredRestaurantsQuery(filterSpec: FilterSpec): any {
   if (!isNil(secondMatchSpec)) {
     aggregateQuery.push({
       $match: secondMatchSpec,
-    });  
+    });
   }
   aggregateQuery.push({
     $project: secondProjectSpec,
   });
 
-  console.log(aggregateQuery);
+  // console.log(aggregateQuery);
 
-  return aggregateQuery;
+  // return aggregateQuery;
   // return fullQuery;
+  return geoQuery;
 }
 
 // PIPELINE SPECS
