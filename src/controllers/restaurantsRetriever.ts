@@ -42,7 +42,7 @@ Future additions:
 */
 
 export function getFilteredRestaurants(request: Request, response: Response, next: any) {
-  
+
   const aggExpression: any = getFilteredRestaurantsQuery(request.body.filterSpec);
 
   Restaurant.aggregate(aggExpression)
@@ -58,26 +58,76 @@ export function getFilteredRestaurants(request: Request, response: Response, nex
 
 }
 
+// example query, from Compass
+const fullQuery =
+  [
+    {
+      $match: {
+        categoryNames: {
+          $in: [
+            'Burritos', 'Sandwiches',
+          ],
+        },
+        'reviews.overallRating': {
+          $exists: true,
+          // $ne: null,
+        },
+      },
+    }, {
+      $unwind: {
+        path: '$reviews',
+      },
+    }, {
+      $match: {
+        $or: [
+          {
+            'reviews.userName': 'ted',
+          },
+        ],
+        'reviews.overallRating': {
+          $gt: 6.5,
+        },
+      },
+    }, {
+      $project: {
+        _id: 0,
+        restaurantName: 1,
+        'reviews.userName': 1,
+        'reviews.comments': 1,
+        'reviews.overallRating': 1,
+      },
+    },
+  ];
+
 export function getFilteredRestaurantsQuery(filterSpec: FilterSpec): any {
 
+  debugger;
+
   const matchSpec = getMatchSpec(filterSpec);
+  const unwindSpec = getUnwindSpec(filterSpec);
   const projectSpec = getProjectSpec(filterSpec);
-  const ratingsValuesMatchSpec = getRatingsValuesMatchSpec(filterSpec);
+  const secondMatchSpec = getSecondMatchSpec(filterSpec);
 
   const aggregateQuery: any[] = [];
   aggregateQuery.push({
     $match: matchSpec,
   });
+  if (!isNil(unwindSpec)) {
+    aggregateQuery.push({
+      $unwind: unwindSpec,
+    });
+  }
   aggregateQuery.push({
     $project: projectSpec,
   });
   aggregateQuery.push({
-    $match: ratingsValuesMatchSpec,
+    $match: secondMatchSpec,
   });
 
   console.log(aggregateQuery);
 
   return aggregateQuery;
+  // return fullQuery;
 }
 
 function getMatchSpec(filterSpec: FilterSpec): any {
@@ -86,7 +136,7 @@ function getMatchSpec(filterSpec: FilterSpec): any {
 
   if (filterSpec.hasOwnProperty('categories')) {
     const categoriesMatchQuery = getCategoriesMatchSpec(filterSpec.categories);
-    matchSpec.categoryNames = categoriesMatchQuery;    
+    matchSpec.categoryNames = categoriesMatchQuery;
   }
 
   if (filterSpec.hasOwnProperty('reviews')) {
@@ -139,6 +189,16 @@ function getReviewsMatchSpec(matchSpec: any, reviewsSpec: RestaurantReviewSpec) 
   return matchSpec;
 }
 
+function getUnwindSpec(filterSpec: FilterSpec): any {
+  // if (!isNil(filterSpec.reviews) && filterSpec.reviews.userName.length > 0) {
+  //   return {
+  //     path: '$reviews',
+  //   };
+  // }
+  return null;
+}
+
+
 function getProjectSpec(filterSpec: FilterSpec): any {
 
   const projectSpec: any = {};
@@ -174,19 +234,23 @@ function getProjectSpec(filterSpec: FilterSpec): any {
   return projectSpec;
 }
 
-function getRatingsValuesMatchSpec(filterSpec: FilterSpec): any {
+function getSecondMatchSpec(filterSpec: FilterSpec): any {
 
   const matchSpec: any = {};
 
   if (filterSpec.hasOwnProperty('reviews')) {
 
     const reviewsSpec: RestaurantReviewSpec = filterSpec.reviews;
-    
+
     if (!isNil(reviewsSpec.overallRating)) {
       matchSpec.overallRatingAvg = {
         $gt: reviewsSpec.overallRating,
       };
     }
+
+    // if (reviewsSpec.userName.length > 0) {
+    //   matchSpec.$or
+    // }
 
     // TEDTODO
     //   separate function?
