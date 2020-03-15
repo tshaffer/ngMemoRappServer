@@ -60,48 +60,61 @@ export function getFilteredRestaurants(request: Request, response: Response, nex
 
 // example query, from Compass
 const fullQuery =
-  [
-    {
-      $match: {
-        categoryNames: {
-          $in: [
-            'Burritos', 'Sandwiches',
-          ],
-        },
-        'reviews.overallRating': {
-          $exists: true,
-          // $ne: null,
-        },
-      },
-    }, {
-      $unwind: {
-        path: '$reviews',
-      },
-    }, {
-      $match: {
-        $or: [
-          {
-            'reviews.userName': 'ted',
-          },
-        ],
-        'reviews.overallRating': {
-          $gt: 6.5,
-        },
-      },
-    }, {
-      $project: {
-        _id: 0,
-        restaurantName: 1,
-        'reviews.userName': 1,
-        'reviews.comments': 1,
-        'reviews.overallRating': 1,
-      },
-    },
-  ];
+[
+  {
+    '$match': {
+      'categoryNames': {
+        '$in': [
+          'Burritos', 'Sandwiches'
+        ]
+      }, 
+      'reviews.overallRating': {
+        '$exists': true, 
+        '$ne': null
+      }
+    }
+  }, {
+    '$project': {
+      'overallRatingAvg': {
+        '$avg': '$reviews.overallRating'
+      }, 
+      '_id': 0, 
+      'restaurantName': 1, 
+      'reviews.userName': 1, 
+      'reviews.comments': 1, 
+      'reviews.overallRating': 1
+    }
+  }, {
+    '$unwind': {
+      'path': '$reviews'
+    }
+  }, {
+    '$match': {
+      '$or': [
+        {
+          'reviews.userName': 'ted'
+        }, {
+          'reviews.userName': 'lori'
+        }
+      ], 
+      'overallRatingAvg': {
+        '$gt': 6.9
+      }
+    }
+  }, {
+    '$project': {
+      '_id': 0, 
+      'restaurantName': 1, 
+      'reviews.userName': 1, 
+      'reviews.comments': 1, 
+      'reviews.overallRating': 1
+    }
+  }
+];
 
 export function getFilteredRestaurantsQuery(filterSpec: FilterSpec): any {
 
-  debugger;
+  // debugger;
 
   const matchSpec = getMatchSpec(filterSpec);
   const unwindSpec = getUnwindSpec(filterSpec);
@@ -126,8 +139,8 @@ export function getFilteredRestaurantsQuery(filterSpec: FilterSpec): any {
 
   console.log(aggregateQuery);
 
-  return aggregateQuery;
-  // return fullQuery;
+  // return aggregateQuery;
+  return fullQuery;
 }
 
 function getMatchSpec(filterSpec: FilterSpec): any {
